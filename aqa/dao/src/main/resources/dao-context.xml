@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:spring-configured/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <aop:config proxy-target-class="true"/>
+    <context:component-scan base-package="com.venuyarra.aqa"/>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:${propertyFile:server_running.properties}</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="localOverride" value="false"/>
+    </bean>
+
+    <bean id="dataSource"
+          class="com.atomikos.jdbc.AtomikosDataSourceBean"
+          init-method="init"
+          destroy-method="close">
+        <property name="uniqueResourceName" value="AQA1DBMS"/>
+        <property name="xaDataSourceClassName" value="${jdbc.server.driverClassName}"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="URL">jdbc:sqlserver://${jdbc.server.name}:${jdbc.server.port};databaseName=@{jdbc.server.dbname}</prop>
+                <prop key="user">${jdbc.server.username}</prop>
+                <prop key="password">${jdbc.server.password}</prop>
+            </props>
+        </property>
+        <property name="poolSize" value="${jdbc.server.pool-size}"/>
+        <property name="testQuery" value="${jdbc.server.testQuery}"/>
+    </bean>
+
+    <!-- Construct Atomikos UserTransactionManager, needed to configure Spring -->
+    <bean id="jtaTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
+          init-method="init" destroy-method="close"/>
+
+    <!-- Also use Atomikos UserTransactionImp, needed to configure Spring  -->
+    <bean id="jtaUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+        <property name="transactionTimeout" value="300" />
+    </bean>
+
+    <!-- Configure the Spring framework to use JTA transactions from Atomikos -->
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="jtaTransactionManager"/>
+        <property name="userTransaction" ref="jtaUserTransaction"/>
+    </bean>
+
+    <bean id="seleniumCommandDao" class="com.venuyarra.aqa.impl.SeleniumCommandDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="taskQueueDao" class="com.venuyarra.aqa.impl.TaskQueueDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+</beans>

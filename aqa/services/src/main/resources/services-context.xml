@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- Configure the ActiveMQ Queue Factory -->
+
+    <import resource="dao-context.xml"/>
+
+    <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+        <property name="brokerURL" value="${jms.broker.url}"/>
+    </bean>
+
+    <!-- Configure the ActiveMQ Queue for accounts -->
+    <bean id="resultsQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${jms.results.queue.name}"/>
+    </bean>
+
+    <bean id="connectionFactoryBean"
+          class="com.atomikos.jms.AtomikosConnectionFactoryBean"
+          init-method="init"
+          destroy-method="close">
+        <property name="uniqueResourceName" value="QUEUE_BROCKER"/>
+        <property name="xaConnectionFactory" ref ="xaFactory"/>
+    </bean>
+
+    <bean id="crmJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactoryBean"/>
+        <property name="defaultDestination" ref="crmQueue"/>
+        <property name="receiveTimeout" value="3000"/>
+        <property name="sessionTransacted" value="true"/>
+
+    </bean>
+</beans>

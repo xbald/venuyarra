@@ -20,20 +20,7 @@
                http://www.springframework.org/schema/integration/mail
                http://www.springframework.org/schema/integration/mail/spring-integration-mail.xsd">
 
-    <context:spring-configured/>
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <aop:config proxy-target-class="true"/>
-    <context:component-scan base-package="com.venuyarra.aqa"/>
-
-    <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:${propertyFile:server_running.properties}</value>
-            </list>
-        </property>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-        <property name="localOverride" value="false"/>
-    </bean>
+    <import resource="services-context.xml"/>
 
 
 </beans>
