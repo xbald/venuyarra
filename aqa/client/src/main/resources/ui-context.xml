@@ -18,7 +18,7 @@
         </property>
     </bean>
 
-    <bean id="mainPanel" class="todo.ui.BoxLayoutPanel"
+    <bean id="mainPanel" class="com.venuyarra.aqa.ui.BoxLayoutPanel"
           init-method="init">
         <property name="axis">
             <!--  "1" corresponds to BoxLayout.Y_AXIS -->
@@ -57,7 +57,7 @@
         </constructor-arg>
     </bean>
     <bean id="buttonPanel" class=
-            "todo.ui.BoxLayoutPanel" init-method="init">
+            "com.venuyarra.aqa.ui.BoxLayoutPanel" init-method="init">
         <property name="axis">
             <!--  "0" corresponds to BoxLayout.X_AXIS -->
             <value>0</value>

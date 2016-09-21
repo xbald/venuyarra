@@ -83,7 +83,7 @@
         <property name="sessionTransacted" value="true"/>
         <property name="subscriptionDurable" value="true"/>
         <property name="durableSubscriptionName" value="${clientId}"/>
-        <property name="destinationName" value="${jms.suites.queue.name}"/>
+        <property name="destination" ref="suitesQueue"/>
         <property name="messageListener" ref="testSuiteReceiver"/>
         <property name="messageSelector" value="${clientIdFilter}"/>
         <property name="concurrentConsumers" value="1"/>

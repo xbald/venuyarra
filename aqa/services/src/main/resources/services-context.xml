@@ -12,6 +12,14 @@
         <property name="brokerURL" value="${jms.broker.url}"/>
     </bean>
 
+<!--
+    <bean id="xaFactoryListener" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+        <property name="brokerURL" value="${jms.broker.url}"/>
+        <property name="clientID" value="AQA_SERVER2"/>
+    </bean>
+-->
+
+
     <!-- Configure the ActiveMQ Queue for test suites -->
     <bean id="suitesQueue" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg value="${jms.suites.queue.name}"/>
@@ -26,8 +34,23 @@
           class="com.atomikos.jms.AtomikosConnectionFactoryBean"
           init-method="init"
           destroy-method="close">
-        <property name="uniqueResourceName" value="QUEUE_BROCKER"/>
+        <property name="uniqueResourceName" value="localhost"/>
         <property name="xaConnectionFactory" ref="xaFactory"/>
+    </bean>
+
+<!--
+    <bean id="connectionFactoryBeanListener"
+          class="com.atomikos.jms.AtomikosConnectionFactoryBean"
+          init-method="init"
+          destroy-method="close">
+        <property name="uniqueResourceName" value="localhost1"/>
+        <property name="xaConnectionFactory" ref="singleConnectionFactory"/>
+    </bean>
+-->
+
+    <bean id="singleConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="connectionFactoryBean"/>
+        <property name="clientId" value="AQA_SERVER1"/>
     </bean>
 
     <bean id="aqaJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -65,14 +88,15 @@
     </bean>
 
     <bean id="myDurableConsumer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactoryBean"/>
+        <property name="connectionFactory" ref="singleConnectionFactory"/>
+        <property name="transactionManager" ref="transactionManager" />
         <property name="sessionTransacted" value="true"/>
         <property name="subscriptionDurable" value="true"/>
-        <property name="durableSubscriptionName" value="AQA_SERVER1"/>
-        <property name="destinationName" value="${jms.results.queue.name}"/>
+        <property name="durableSubscriptionName" value="AQA_SERVER7"/>
+        <property name="destination" ref="resultsQueue"/>
         <property name="messageListener" ref="resultsProcessor"/>
-        <property name="concurrentConsumers" value="10"/>
-        <property name="maxConcurrentConsumers" value="20"/>
+        <property name="concurrentConsumers" value="1"/>
+        <property name="maxConcurrentConsumers" value="1"/>
         <property name="receiveTimeout" value="10000"/>
         <property name="idleTaskExecutionLimit" value="10"/>
         <property name="idleConsumerLimit" value="5"/>
