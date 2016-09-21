@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:component-scan base-package="com.venuyarra.aqa"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <import resource="ui-context.xml"/>
+
+    <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:${propertyFile:client_running.properties}</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="localOverride" value="false"/>
+    </bean>
+
+    <bean id="testSuiteReceiver" class="com.venuyarra.aqa.messaging.impl.TestSuiteReceiver">
+        <property name="testSuiteProcessor" ref="testSuiteProcessor"/>
+    </bean>
+
+    <bean id="testSuiteProcessor" class="com.venuyarra.aqa.selenium.impl.TestSuiteProcessorImpl">
+        <property name="webDriverFactory" ref="webDriverFactory"/>
+        <property name="jmsMessageSender" ref="jmsMessageSender"/>
+    </bean>
+
+    <bean id="webDriverFactory" class="com.venuyarra.aqa.selenium.SeleniumFactory">
+        <!--
+                    <constructor-arg name="browserType" value="${browserType}"/>
+                            <constructor-arg name="isRemote" value="${isRemote}"/>
+                            <constructor-arg name="hubUrl" value="${hubUrl}"/>
+                            <constructor-arg name="testSiteUrl" value="${testSiteUrl}"/>
+                            <constructor-arg name="browserVersion" value="${browserVersion}"/>
+                            <constructor-arg name="osName" value="${osName}"/>
+                            <constructor-arg name="elementWaitSeconds" value="${elementWaitSeconds}"/>
+                            <constructor-arg name="ieDriverPath" value="${webdriver.ie.driver}"/>
+                            <constructor-arg name="edgeDriverPath" value="${webdriver.edge.driver}"/>
+                            <constructor-arg name="chromeDriverPath" value="${webdriver.chrome.driver}"/>
+        -->
+    </bean>
+    <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+        <property name="brokerURL" value="${jms.broker.url}"/>
+        <property name="clientID" value="${clientId}"/>
+    </bean>
+
+    <bean id="connectionFactoryBean" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="xaFactory"/>
+    </bean>
+
+    <!-- Configure the ActiveMQ Queue for accounts -->
+    <bean id="resultsQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${jms.results.queue.name}"/>
+    </bean>
+
+    <bean id="suitesQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${jms.suites.queue.name}"/>
+    </bean>
+
+    <bean id="aqaJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="connectionFactoryBean"/>
+        <property name="defaultDestination" ref="resultsQueue"/>
+        <property name="receiveTimeout" value="3000"/>
+        <property name="sessionTransacted" value="true"/>
+    </bean>
+
+    <bean id="jmsMessageSender" class="com.venuyarra.aqa.messaging.impl.JmsMessageSenderImpl">
+        <property name="aqaJmsTemplate" ref="aqaJmsTemplate"/>
+    </bean>
+
+    <bean id="myDurableConsumer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactoryBean"/>
+        <property name="sessionTransacted" value="true"/>
+        <property name="subscriptionDurable" value="true"/>
+        <property name="durableSubscriptionName" value="${clientId}"/>
+        <property name="destinationName" value="${jms.suites.queue.name}"/>
+        <property name="messageListener" ref="testSuiteReceiver"/>
+        <property name="messageSelector" value="${clientIdFilter}"/>
+        <property name="concurrentConsumers" value="1"/>
+        <property name="maxConcurrentConsumers" value="1"/>
+        <property name="receiveTimeout" value="10000"/>
+        <property name="idleTaskExecutionLimit" value="10"/>
+        <property name="idleConsumerLimit" value="5"/>
+    </bean>
+
+</beans>

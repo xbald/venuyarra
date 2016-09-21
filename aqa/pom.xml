@@ -12,12 +12,19 @@
         <module>api</module>
         <module>dao</module>
         <module>services</module>
+        <module>client</module>
     </modules>
+
+    <repositories>
+        <repository>
+            <id>clojars</id>
+            <url>http://clojars.org/repo/</url>
+        </repository>
+    </repositories>
 
     <name>aqa</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.starter.activemq.version>1.4.0.RELEASE</spring.boot.starter.activemq.version>
         <selenium.version>2.53.0</selenium.version>
         <hamcrest.version>1.3</hamcrest.version>
         <slf4j.version>1.7.21</slf4j.version>
@@ -33,6 +40,7 @@
         <jackson.databind.version>2.8.2</jackson.databind.version>
         <atomikos.version>4.0.4</atomikos.version>
         <activemq.version>5.14.0</activemq.version>
+        <sqlserver.version>4.0</sqlserver.version>
     </properties>
 
     <dependencyManagement>
@@ -68,10 +76,15 @@
                 <artifactId>spring-tx</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jms</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.activemq</groupId>
-                <artifactId>activemq-broker</artifactId>
+                <artifactId>activemq-all</artifactId>
                 <version>${activemq.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.atomikos/transactions-jta -->
@@ -92,17 +105,23 @@
                 <artifactId>transactions-jdbc</artifactId>
                 <version>${atomikos.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-kahadb-store</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/javax.transaction/jta -->
+            <dependency>
+                <groupId>javax.transaction</groupId>
+                <artifactId>jta</artifactId>
+                <version>1.1</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.microsoft.sqlserver</groupId>
                 <artifactId>sqljdbc4</artifactId>
-                <version>4.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.sourceforge.jtds</groupId>
-                <artifactId>jtds</artifactId>
-                <version>1.3.1</version>
+                <version>${sqlserver.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
             <dependency>
@@ -111,9 +130,51 @@
                 <version>${jackson.databind.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-server</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-remote-driver</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ru.yandex.qatools.htmlelements</groupId>
+                <artifactId>htmlelements-all</artifactId>
+                <version>${htmlelements.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ru.yandex.qatools.htmlelements</groupId>
+                        <artifactId>htmlelements-thucydides</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>ru.yandex.qatools.matchers</groupId>
+                <artifactId>webdriver-matchers</artifactId>
+                <version>${webdrivermatchers.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+            </dependency>
 
         </dependencies>
-
     </dependencyManagement>
 
     <build>

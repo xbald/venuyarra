@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation=
                "http://www.springframework.org/schema/beans
-               http://www.springframework.org/schema/beans/spring-beans.xsd
-               http://www.springframework.org/schema/context
-               http://www.springframework.org/schema/context/spring-context.xsd
-               http://www.springframework.org/schema/aop
-               http://www.springframework.org/schema/aop/spring-aop.xsd
-               http://www.springframework.org/schema/tx
-               http://www.springframework.org/schema/tx/spring-tx.xsd">
-    <!-- Configure the ActiveMQ Queue Factory -->
+               http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!-- Configure the ActiveMQ Queue Factory -->
     <import resource="dao-context.xml"/>
 
     <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
         <property name="brokerURL" value="${jms.broker.url}"/>
     </bean>
 
-    <!-- Configure the ActiveMQ Queue for accounts -->
+    <!-- Configure the ActiveMQ Queue for test suites -->
+    <bean id="suitesQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="${jms.suites.queue.name}"/>
+    </bean>
+
+    <!-- Configure the ActiveMQ Queue for results -->
     <bean id="resultsQueue" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg value="${jms.results.queue.name}"/>
     </bean>
@@ -31,14 +27,55 @@
           init-method="init"
           destroy-method="close">
         <property name="uniqueResourceName" value="QUEUE_BROCKER"/>
-        <property name="xaConnectionFactory" ref ="xaFactory"/>
+        <property name="xaConnectionFactory" ref="xaFactory"/>
     </bean>
 
-    <bean id="crmJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+    <bean id="aqaJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="connectionFactoryBean"/>
-        <property name="defaultDestination" ref="crmQueue"/>
+        <property name="defaultDestination" ref="suitesQueue"/>
         <property name="receiveTimeout" value="3000"/>
         <property name="sessionTransacted" value="true"/>
-
     </bean>
+
+    <bean id="seleniumCommandService" class="com.venuyarra.aqa.services.impl.SeleniumCommandServiceImpl">
+        <property name="seleniumCommandDao" ref="seleniumCommandDao"/>
+        <property name="parameterDao" ref="parameterDao"/>
+    </bean>
+
+    <bean id="testCaseService" class="com.venuyarra.aqa.services.impl.TestCaseServiceImpl">
+        <property name="testCaseDao" ref="testCaseDao"/>
+        <property name="seleniumCommandService" ref="seleniumCommandService"/>
+    </bean>
+
+    <bean id="testSuiteService" class="com.venuyarra.aqa.services.impl.TestSuiteServiceImpl">
+        <property name="testSuiteDao" ref="testSuiteDao"/>
+        <property name="testCaseService" ref="testCaseService"/>
+    </bean>
+
+    <bean id="messageService" class="com.venuyarra.aqa.services.impl.MessagingServiceImpl">
+        <property name="aqaJmsTemplate" ref="aqaJmsTemplate"/>
+    </bean>
+
+    <bean id="resultsService" class="com.venuyarra.aqa.services.impl.ResultsServiceImpl">
+        <property name="resultDao" ref="resultDao"/>
+    </bean>
+
+    <bean id="resultsProcessor" class="com.venuyarra.aqa.services.impl.ResultsProcessor">
+        <property name="resultService" ref="resultsService"/>
+    </bean>
+
+    <bean id="myDurableConsumer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactoryBean"/>
+        <property name="sessionTransacted" value="true"/>
+        <property name="subscriptionDurable" value="true"/>
+        <property name="durableSubscriptionName" value="AQA_SERVER1"/>
+        <property name="destinationName" value="${jms.results.queue.name}"/>
+        <property name="messageListener" ref="resultsProcessor"/>
+        <property name="concurrentConsumers" value="10"/>
+        <property name="maxConcurrentConsumers" value="20"/>
+        <property name="receiveTimeout" value="10000"/>
+        <property name="idleTaskExecutionLimit" value="10"/>
+        <property name="idleConsumerLimit" value="5"/>
+    </bean>
+
 </beans>

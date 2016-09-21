@@ -2,21 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation=
                "http://www.springframework.org/schema/beans
                http://www.springframework.org/schema/beans/spring-beans.xsd
                http://www.springframework.org/schema/context
                http://www.springframework.org/schema/context/spring-context.xsd
-               http://www.springframework.org/schema/aop
-               http://www.springframework.org/schema/aop/spring-aop.xsd
+
+
                http://www.springframework.org/schema/tx
                http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <context:spring-configured/>
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <aop:config proxy-target-class="true"/>
     <context:component-scan base-package="com.venuyarra.aqa"/>
     <tx:annotation-driven transaction-manager="transactionManager" />
 
@@ -38,7 +34,7 @@
         <property name="xaDataSourceClassName" value="${jdbc.server.driverClassName}"/>
         <property name="xaProperties">
             <props>
-                <prop key="URL">jdbc:sqlserver://${jdbc.server.name}:${jdbc.server.port};databaseName=@{jdbc.server.dbname}</prop>
+                <prop key="URL">jdbc:sqlserver://${jdbc.server.name}:${jdbc.server.port};databaseName=${jdbc.server.dbname}</prop>
                 <prop key="user">${jdbc.server.username}</prop>
                 <prop key="password">${jdbc.server.password}</prop>
             </props>
@@ -70,4 +66,19 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
+    <bean id="testCaseDao" class="com.venuyarra.aqa.impl.TestCaseDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="testSuiteDao" class="com.venuyarra.aqa.impl.TestSuiteDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="parameterDao" class="com.venuyarra.aqa.impl.ParameterDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="resultDao" class="com.venuyarra.aqa.impl.ResultDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 </beans>

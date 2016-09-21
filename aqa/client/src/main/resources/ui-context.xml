@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="mainFrame" class="com.venuyarra.aqa.ui.MainFrame" init-method="init">
+        <property name="title">
+            <value>Selenium Command Executor</value>
+        </property>
+        <property name="contentPane">
+            <ref bean="mainPanel"/>
+        </property>
+    </bean>
+
+    <bean id="mainPanel" class="todo.ui.BoxLayoutPanel"
+          init-method="init">
+        <property name="axis">
+            <!--  "1" corresponds to BoxLayout.Y_AXIS -->
+            <!--  Spring can access constants, but it's more complex -->
+            <value>1</value>
+        </property>
+        <property name="panelComponents">
+            <list>
+                <ref bean="itemScrollPane"/>
+                <ref bean="buttonPanel"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="itemScrollPane" class="javax.swing.JScrollPane">
+        <constructor-arg>
+            <ref bean="itemTable"/>
+        </constructor-arg>
+    </bean>
+    <bean id="itemTable" class="javax.swing.JTable">
+        <property name="model">
+            <ref bean="itemTableModel"/>
+        </property>
+    </bean>
+    <bean id="itemTableModel" class="com.venuyarra.aqa.ui.TableModel">
+        <property name="itemList">
+            <ref bean="itemList"/>
+        </property>
+    </bean>
+    <bean id="itemList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <value>Item 1</value>
+                <value>Item 2</value>
+                <value>Item 3</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean id="buttonPanel" class=
+            "todo.ui.BoxLayoutPanel" init-method="init">
+        <property name="axis">
+            <!--  "0" corresponds to BoxLayout.X_AXIS -->
+            <value>0</value>
+        </property>
+        <property name="panelComponents">
+            <list>
+            </list>
+        </property>
+    </bean>
+
+</beans>
