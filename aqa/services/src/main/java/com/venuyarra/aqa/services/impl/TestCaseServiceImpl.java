@@ -1,6 +1,5 @@
 package com.venuyarra.aqa.services.impl;
 
-import com.venuyarra.aqa.SeleniumCommandDao;
 import com.venuyarra.aqa.TestCaseDao;
 import com.venuyarra.aqa.dto.SeleniumCommand;
 import com.venuyarra.aqa.dto.TestCase;

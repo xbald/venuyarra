@@ -34,7 +34,7 @@ public class SeleniumCommandDaoImpl extends JdbcDaoSupport implements SeleniumCo
     private final String GET_PARAMETERS = "select * from " + OBJ_MAP_TABLE_NAME + " as om where om.obj_key =?";
 
     @Override
-    public List<SeleniumCommand>getByTestCaseId(Long testCaseId) {
+    public List<SeleniumCommand> getByTestCaseId(Long testCaseId) {
         return getJdbcTemplate().query(GET_BY_TEST_CASE_ID, MAPPER, testCaseId);
     }
 
@@ -49,34 +49,39 @@ public class SeleniumCommandDaoImpl extends JdbcDaoSupport implements SeleniumCo
         public SeleniumCommand mapRow(ResultSet resultSet, int i) throws SQLException {
             final String tcs_action = resultSet.getString("tcs_action");
             final Long obj_key = resultSet.getLong("tcs_obj_key");
+            final Long id = resultSet.getLong("tcs_key");
             switch (tcs_action) {
-                case "click": {
+                case "Click": {
                     ClickCommand clickCommand = new ClickCommand();
+                    clickCommand.setId(id);
                     clickCommand.setParameter(obj_key);
                     return clickCommand;
                 }
-                case "validate": {
+                case "Validation": {
                     ValidationCommand validationCommand = new ValidationCommand();
+                    validationCommand.setId(id);
                     validationCommand.setExpectedResult(resultSet.getString("tcs_expected_result"));
                     validationCommand.setParameter(obj_key);
                     return validationCommand;
                 }
-                case "select": {
+                case "Select": {
                     SelectCommand selectCommand = new SelectCommand();
+                    selectCommand.setId(id);
                     selectCommand.setValue(resultSet.getString("tcs_obj_val"));
                     selectCommand.setParameter(obj_key);
                     return selectCommand;
                 }
 
-                case "enter": {
+                case "Enter": {
                     EnterCommand enterCommand = new EnterCommand();
+                    enterCommand.setId(id);
                     enterCommand.setValue(resultSet.getString("tcs_obj_val"));
                     enterCommand.setParameter(obj_key);
                     return enterCommand;
                 }
 
                 default:
-                    throw new IllegalArgumentException(tcs_action + " not supported command");
+                    throw new IllegalArgumentException("'" + tcs_action + "' not supported command");
             }
         }
     }

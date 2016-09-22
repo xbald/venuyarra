@@ -1,6 +1,7 @@
 package com.venuyarra.aqa.services.impl;
 
 import com.venuyarra.aqa.dto.TestSuite;
+import com.venuyarra.aqa.dto.TestTask;
 import com.venuyarra.aqa.services.MessagingService;
 import com.venuyarra.aqa.services.SuiteDispatcherService;
 import com.venuyarra.aqa.services.TestSuiteService;
@@ -13,9 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class SuiteDispatcherServiceImpl implements SuiteDispatcherService {
     private TestSuiteService testSuiteService;
     private MessagingService messagingService;
+
     @Override
-    public void DispatchSuite(Long suiteId, String clientId, String browser) {
-        final TestSuite testSuite = testSuiteService.get(suiteId);
-        messagingService.sendMessageToTopic(testSuite,clientId,browser);
+    public void dispatchSuite(TestTask testTask) {
+        final TestSuite testSuite = testSuiteService.get(testTask.getTestSuiteId());
+        messagingService.sendMessageToTopic(testSuite,testTask.getClientId(),testTask.getBrowserType());
+    }
+
+    public void setTestSuiteService(TestSuiteService testSuiteService) {
+        this.testSuiteService = testSuiteService;
+    }
+
+    public void setMessagingService(MessagingService messagingService) {
+        this.messagingService = messagingService;
     }
 }

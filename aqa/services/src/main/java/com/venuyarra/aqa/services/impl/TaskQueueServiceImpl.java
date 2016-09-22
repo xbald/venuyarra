@@ -1,6 +1,5 @@
 package com.venuyarra.aqa.services.impl;
 
-import com.venuyarra.aqa.TaskQueueDao;
 import com.venuyarra.aqa.dto.TestTask;
 import com.venuyarra.aqa.services.TaskQueueService;
 import org.springframework.beans.factory.annotation.Autowired;

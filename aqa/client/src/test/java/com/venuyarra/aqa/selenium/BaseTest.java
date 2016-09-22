@@ -7,7 +7,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 /**
  * Created by NIKOLAI on 22.09.2016.
  */
-@ContextConfiguration(locations = "classpath:client-context.xml")
+@ContextConfiguration(locations = "classpath:ui-context.xml")
 public class BaseTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

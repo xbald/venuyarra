@@ -126,20 +126,20 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     private static class LocatorResolver {
 
         public static By resolve(String locatorType, String locatorValue) {
-            switch (locatorType) {
-                case "css":
+            switch (locatorType.toLowerCase()) {
+                case "cssselector":
                     return By.cssSelector(locatorValue);
                 case "id":
                     return By.id(locatorValue);
                 case "xpath":
                     return By.xpath(locatorValue);
-                case "linkText":
+                case "linktext":
                     return By.linkText(locatorValue);
-                case "className":
+                case "classname":
                     return By.className(locatorValue);
-                case "partialLinkText":
+                case "partiallinktext":
                     return By.partialLinkText(locatorValue);
-                case "tagName":
+                case "tagname":
                     return By.tagName(locatorValue);
                 case "name":
                     return By.name(locatorValue);

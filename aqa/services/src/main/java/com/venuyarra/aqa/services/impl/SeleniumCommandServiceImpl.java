@@ -32,7 +32,7 @@ public class SeleniumCommandServiceImpl implements SeleniumCommandService {
         for (SeleniumCommand seleniumCommand : commandList) {
             final Parameter parameter = parameterDao.get(seleniumCommand.getParameter());
             seleniumCommand.setLocatorValue(parameter.getLocatorValue());
-            seleniumCommand.setLocatorType(parameter.getLocatorValue());
+            seleniumCommand.setLocatorType(parameter.getLocatorType());
         }
         return commandList;
     }

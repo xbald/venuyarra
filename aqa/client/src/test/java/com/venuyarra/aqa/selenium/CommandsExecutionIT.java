@@ -107,7 +107,11 @@ public class CommandsExecutionIT extends BaseTest {
         webDriver.get("https://www.yahoo.com/");
 
         List<SeleniumCommand> commandList = new ArrayList<>();
-        commandList.addAll(Arrays.asList(createValidationCommand(), createEnterCommand(), createClickCommand()));
+        commandList.addAll(Arrays.asList(
+                createValidationCommand(),
+                createEnterCommand(),
+                createClickCommand()
+        ));
 
         List<ClientResponse> clientResponseList =
                 commandList

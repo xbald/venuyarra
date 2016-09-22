@@ -62,10 +62,6 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="taskQueueDao" class="com.venuyarra.aqa.impl.TaskQueueDaoImpl">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
     <bean id="testCaseDao" class="com.venuyarra.aqa.impl.TestCaseDaoImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
@@ -81,4 +77,6 @@
     <bean id="resultDao" class="com.venuyarra.aqa.impl.ResultDaoImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
+    <bean id="testTaskRowMapper" class="com.venuyarra.aqa.impl.TaskRowMapper"/>
 </beans>

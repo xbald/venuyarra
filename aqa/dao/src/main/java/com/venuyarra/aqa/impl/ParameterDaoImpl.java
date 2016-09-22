@@ -12,7 +12,9 @@ import java.sql.SQLException;
  * Created by NIKOLAI on 19.09.2016.
  */
 public class ParameterDaoImpl extends JdbcDaoSupport implements ParameterDao {
-    private final static String QUERY = "select * from cmatrix_object_map as om where op.obj_key=?";
+    private final static String QUERY = "select * from cmatrix_object_map as om " +
+            "join cmatrix_object_map_details as omd " +
+            "on omd.detail_obj_key=om.obj_key where om.obj_key=?";
     private static final ParameterMapper MAPPER = new ParameterMapper();
 
     @Override
@@ -25,8 +27,8 @@ public class ParameterDaoImpl extends JdbcDaoSupport implements ParameterDao {
         @Override
         public Parameter mapRow(ResultSet rs, int rowNum) throws SQLException {
             final Parameter parameter = new Parameter();
-            final String obj_prop1 = rs.getString("obj_prop1");
-            final String obj_prop_val1 = rs.getString("obj_prop_val1");
+            final String obj_prop1 = rs.getString("detail_obj_prop");
+            final String obj_prop_val1 = rs.getString("detail_obj_prop_val");
 
             parameter.setId(rs.getLong("obj_key"));
             parameter.setLocatorType(obj_prop1);

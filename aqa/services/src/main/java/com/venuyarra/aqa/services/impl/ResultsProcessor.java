@@ -3,6 +3,7 @@ package com.venuyarra.aqa.services.impl;
 import com.venuyarra.aqa.dto.ClientResponse;
 import com.venuyarra.aqa.services.ResultsService;
 import com.venuyarra.aqa.services.impl.ResultsServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -13,6 +14,7 @@ import javax.xml.bind.JAXB;
 /**
  * Created by NIKOLAI on 21.09.2016.
  */
+@Transactional
 public class ResultsProcessor implements MessageListener{
 
     private ResultsService resultService;

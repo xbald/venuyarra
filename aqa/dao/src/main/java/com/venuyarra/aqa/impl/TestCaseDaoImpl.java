@@ -17,9 +17,6 @@ import java.util.List;
 public class TestCaseDaoImpl extends JdbcDaoSupport implements TestCaseDao {
     private static final String TABLE_NAME = "cmatrix_testcase_mapping";
 
-    @Autowired
-    private SeleniumCommandDao commandDao;
-
     private final String GET_QUERY = "select * from " + TABLE_NAME + " where tsm_key=?";
     private final String GET_BY_SUITE_ID = "select * from " + TABLE_NAME + " where tsm_key in " +
             "(select tsp_key from cmatrix_test_suite_mapping where cts_key=?)";
@@ -43,6 +40,7 @@ public class TestCaseDaoImpl extends JdbcDaoSupport implements TestCaseDao {
         public TestCase mapRow(ResultSet rs, int rowNum) throws SQLException {
             TestCase testCase = new TestCase();
             testCase.setTitle(rs.getString("tsm_name"));
+            testCase.setId(rs.getLong("tsm_key"));
             return testCase;
         }
     }

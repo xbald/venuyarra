@@ -1,8 +1,10 @@
 package com.venuyarra.aqa.services;
 
+import com.venuyarra.aqa.dto.TestTask;
+
 /**
  * Created by NIKOLAI on 19.09.2016.
  */
 public interface SuiteDispatcherService {
-    void DispatchSuite(Long suiteId, String clientId, String browser);
+    void dispatchSuite(TestTask testTask);
 }

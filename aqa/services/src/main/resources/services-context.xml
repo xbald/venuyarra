@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xmlns:int-jdbc="http://www.springframework.org/schema/integration/jdbc"
+       xmlns:int="http://www.springframework.org/schema/integration"
        xsi:schemaLocation=
                "http://www.springframework.org/schema/beans
-               http://www.springframework.org/schema/beans/spring-beans.xsd">
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://activemq.apache.org/schema/core
+               http://activemq.apache.org/schema/core/activemq-core.xsd
+               http://www.springframework.org/schema/integration
+               http://www.springframework.org/schema/integration/spring-integration.xsd
+               http://www.springframework.org/schema/integration/jdbc
+               http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd">
 
     <!-- Configure the ActiveMQ Queue Factory -->
     <import resource="dao-context.xml"/>
 
+
+    <amq:broker useJmx="false" persistent="true">
+        <amq:transportConnectors>
+            <amq:transportConnector name="" uri="${jms.broker.url}"/>
+        </amq:transportConnectors>
+    </amq:broker>
+
     <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-        <property name="brokerURL" value="${jms.broker.url}"/>
+        <property name="brokerURL" value="failover:${jms.broker.url}"/>
     </bean>
 
-<!--
-    <bean id="xaFactoryListener" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-        <property name="brokerURL" value="${jms.broker.url}"/>
-        <property name="clientID" value="AQA_SERVER2"/>
+    <bean id="suiteDispatcher" class="com.venuyarra.aqa.services.impl.SuiteDispatcherServiceImpl">
+        <property name="testSuiteService" ref="testSuiteService"/>
+        <property name="messagingService" ref="messageService"/>
     </bean>
--->
-
 
     <!-- Configure the ActiveMQ Queue for test suites -->
     <bean id="suitesQueue" class="org.apache.activemq.command.ActiveMQQueue">
@@ -38,16 +51,14 @@
         <property name="xaConnectionFactory" ref="xaFactory"/>
     </bean>
 
-<!--
-    <bean id="connectionFactoryBeanListener"
-          class="com.atomikos.jms.AtomikosConnectionFactoryBean"
-          init-method="init"
-          destroy-method="close">
-        <property name="uniqueResourceName" value="localhost1"/>
-        <property name="xaConnectionFactory" ref="singleConnectionFactory"/>
-    </bean>
--->
-
+    <!--   <bean id="listenerConnectionFactoryBean"
+             class="com.atomikos.jms.AtomikosConnectionFactoryBean"
+             init-method="init"
+             destroy-method="close">
+           <property name="uniqueResourceName" value="listenerResource"/>
+           <property name="xaConnectionFactory" ref="xaFactory"/>
+       </bean>
+   -->
     <bean id="singleConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
         <property name="targetConnectionFactory" ref="connectionFactoryBean"/>
         <property name="clientId" value="AQA_SERVER1"/>
@@ -89,7 +100,7 @@
 
     <bean id="myDurableConsumer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="singleConnectionFactory"/>
-        <property name="transactionManager" ref="transactionManager" />
+        <property name="transactionManager" ref="transactionManager"/>
         <property name="sessionTransacted" value="true"/>
         <property name="subscriptionDurable" value="true"/>
         <property name="durableSubscriptionName" value="AQA_SERVER7"/>
@@ -102,4 +113,21 @@
         <property name="idleConsumerLimit" value="5"/>
     </bean>
 
+    <int:channel id="target"/>
+
+    <int-jdbc:inbound-channel-adapter
+            auto-startup="true"
+            query="select * from cmatrix_suite_execution_queue where status='PLANNED'"
+            channel="target"
+            data-source="dataSource"
+            row-mapper="testTaskRowMapper"
+            update="update cmatrix_suite_execution_queue set status='PROCESSED' where id in (:id)">
+        <int:poller fixed-rate="2000">
+            <int:transactional/>
+        </int:poller>
+    </int-jdbc:inbound-channel-adapter>
+
+    <int:service-activator
+            id="serviceActivator"
+            ref="suiteDispatcher" input-channel="target" method="dispatchSuite"/>
 </beans>

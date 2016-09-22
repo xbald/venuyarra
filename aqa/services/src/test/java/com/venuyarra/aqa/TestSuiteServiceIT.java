@@ -19,7 +19,7 @@ public class TestSuiteServiceIT extends BaseTest {
     private TestSuiteService testSuiteService;
     @Test
     public void testSuiteServiceTest() throws JAXBException {
-        final TestSuite testSuite = testSuiteService.get(27L);
+        final TestSuite testSuite = testSuiteService.get(58L);
 
         final JAXBContext jaxbContext = JAXBContext.newInstance(TestSuite.class);
 

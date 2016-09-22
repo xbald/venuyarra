@@ -1,5 +1,6 @@
 package com.venuyarra.aqa.services.impl;
 
+import com.venuyarra.aqa.dto.BrowserType;
 import com.venuyarra.aqa.dto.TestCase;
 import com.venuyarra.aqa.dto.TestSuite;
 import com.venuyarra.aqa.services.MessagingService;
@@ -21,7 +22,7 @@ public class MessagingServiceImpl implements MessagingService {
     private JmsTemplate aqaJmsTemplate;
 
     @Override
-    public void sendMessageToTopic(TestSuite testSuite, String clientId, String browser) {
+    public void sendMessageToTopic(TestSuite testSuite, String clientId, BrowserType browser) {
         aqaJmsTemplate.send(
                 session -> {
                     TextMessage message = session.createTextMessage();
@@ -35,7 +36,7 @@ public class MessagingServiceImpl implements MessagingService {
 
                         message.setText(sw.toString());
                         message.setStringProperty("clientId", clientId);
-                        message.setStringProperty("browser", browser);
+                        message.setStringProperty("browser", browser.toString());
                     } catch (JAXBException e) {
                         e.printStackTrace();
                     }
