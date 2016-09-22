@@ -11,9 +11,9 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * Created by NIKOLAI on 18.09.2016.
  */
-@XmlRootElement(name = "enter_command")
+@XmlRootElement(name = "entercommand")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(propOrder = {"value"})
+@XmlType(name = "entercommand", propOrder = {"value"})
 public class EnterCommand extends SeleniumCommand {
     private String value;
 

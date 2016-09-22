@@ -20,20 +20,24 @@ public class TestCaseDaoImpl extends JdbcDaoSupport implements TestCaseDao {
     @Autowired
     private SeleniumCommandDao commandDao;
 
-    private final String GET_QUERY = "select * from " + TABLE_NAME + "where tcs_key=?";
-    private final String GET_BY_SUITE_ID = "select * from " + TABLE_NAME + "where tcs_tsm_key=?";
+    private final String GET_QUERY = "select * from " + TABLE_NAME + " where tsm_key=?";
+    private final String GET_BY_SUITE_ID = "select * from " + TABLE_NAME + " where tsm_key in " +
+            "(select tsp_key from cmatrix_test_suite_mapping where cts_key=?)";
+
+    private final static TestCaseRowMapper MAPPER = new TestCaseRowMapper();
 
     @Override
     public TestCase get(Long testCaseId) {
-        return getJdbcTemplate().queryForObject(GET_QUERY, TestCase.class);
+        return getJdbcTemplate()
+                .queryForObject(GET_QUERY, TestCase.class);
     }
 
     @Override
     public List<TestCase> getAllByTestSuiteId(Long testSuiteId) {
-        return null;
+        return getJdbcTemplate().query(GET_BY_SUITE_ID, MAPPER, testSuiteId);
     }
 
-    public static class CommandRowMapper implements RowMapper<TestCase> {
+    public static class TestCaseRowMapper implements RowMapper<TestCase> {
 
         @Override
         public TestCase mapRow(ResultSet rs, int rowNum) throws SQLException {

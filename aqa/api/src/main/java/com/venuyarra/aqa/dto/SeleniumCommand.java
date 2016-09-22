@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "command")
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = {"id", "locatorType", "locatorValue"})
-@XmlSeeAlso({ClickCommand.class, EnterCommand.class, ValidationCommand.class, SeleniumCommand.class})
+@XmlSeeAlso({ClickCommand.class, EnterCommand.class, ValidationCommand.class, SelectCommand.class})
 public abstract class SeleniumCommand implements SeleniumExecutable {
     private Long id;
     private Long parameter;

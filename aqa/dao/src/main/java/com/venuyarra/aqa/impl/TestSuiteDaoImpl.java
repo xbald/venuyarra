@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class TestSuiteDaoImpl extends JdbcDaoSupport implements TestSuiteDao {
 
     private final static String GET_BY_ID =
-            "as tsm join cmatrix_test_suite as ts on tsm.cts_key=ts.tts_key where ts_key=?";
+            "select * from cmatrix_test_suite_mapping as tsm join cmatrix_test_suite as ts on tsm.cts_key=ts.tts_key where ts_key=?";
 
     private final static TestSuiteRowMapper MAPPER = new TestSuiteRowMapper();
 

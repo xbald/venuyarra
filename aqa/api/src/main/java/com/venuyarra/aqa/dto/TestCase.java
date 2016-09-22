@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * Created by NIKOLAI on 18.09.2016.
  */
-@XmlRootElement(name = "TestCase")
-@XmlType(propOrder = {"id", "title", "commands"})
+@XmlRootElement(name = "testcase")
+@XmlType(name = "testcase", propOrder = {"id", "title", "commandList"})
 @XmlAccessorType(XmlAccessType.NONE)
 public class TestCase {
     private Long id;

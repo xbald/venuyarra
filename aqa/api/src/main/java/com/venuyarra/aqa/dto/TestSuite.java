@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * Created by NIKOLAI on 19.09.2016.
  */
-@XmlRootElement(name = "test_suite")
+@XmlRootElement(name = "testsuite")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(propOrder = {"id", "title", "testcases"})
+@XmlType(name = "testsuite", propOrder = {"id", "title", "testCaseList"})
 public class TestSuite {
     private Long id;
     private String title;

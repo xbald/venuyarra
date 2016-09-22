@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "response")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(propOrder = {"commandId", "result", "returnedValue", "throwable"})
+@XmlType(name = "response", propOrder = {"commandId", "executionResult", "returnedValue", "throwable"})
 public class ClientResponse {
     private Long commandId;
     private Throwable throwable;

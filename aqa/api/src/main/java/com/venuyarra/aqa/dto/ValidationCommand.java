@@ -11,8 +11,8 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * Created by NIKOLAI on 18.09.2016.
  */
-@XmlRootElement(name = "validation_command")
-@XmlType(propOrder = {"expected"})
+@XmlRootElement(name = "validationcommand")
+@XmlType(name = "validationcommand", propOrder = {"expectedResult"})
 @XmlAccessorType(XmlAccessType.NONE)
 public class ValidationCommand extends SeleniumCommand {
     private String expectedResult;
