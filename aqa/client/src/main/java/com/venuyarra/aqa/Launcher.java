@@ -7,7 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class Launcher {
     public void launch() {
-        String[] contextPaths = new String[]{"classpath:client-context.xml"};
+        String[] contextPaths = new String[]{"classpath:ui-context.xml"};
         new ClassPathXmlApplicationContext(contextPaths);
     }
 }

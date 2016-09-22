@@ -29,8 +29,9 @@ public class TestSuiteProcessorImpl implements TestSuiteProcessor {
 
     public void processTestSuite(TestSuite testCase, String clientId, String browser, String url) {
         List<TestCase> testCaseList = testCase.getTestCaseList();
+        WebDriver webDriver = null;
         try {
-            WebDriver webDriver = webDriverFactory.getWebDriver(browser);
+            webDriver = webDriverFactory.getWebDriver(browser);
             WebDriverCommandExecutor webDriverCommandExecutor = new WebDriverCommandExecutor(webDriver);
             for (TestCase aCase : testCaseList) {
                 List<SeleniumCommand> seleniumCommandList = aCase.getCommandList();
@@ -66,6 +67,10 @@ public class TestSuiteProcessorImpl implements TestSuiteProcessor {
                         }
                     }
                 }
+            }
+        } finally {
+            if (webDriver != null) {
+                webDriver.quit();
             }
         }
     }

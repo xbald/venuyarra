@@ -3,6 +3,7 @@ package com.venuyarra.aqa;
 import com.venuyarra.aqa.dto.TestSuite;
 import com.venuyarra.aqa.services.TestSuiteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBContext;
@@ -12,7 +13,7 @@ import java.io.StringWriter;
 /**
  * Created by NIKOLAI on 21.09.2016.
  */
-
+@Rollback
 public class TestSuiteServiceIT extends BaseTest {
     @Autowired
     private TestSuiteService testSuiteService;
