@@ -4,16 +4,22 @@ import com.venuyarra.aqa.dto.ClickCommand;
 import com.venuyarra.aqa.dto.ClientResponse;
 import com.venuyarra.aqa.dto.EnterCommand;
 import com.venuyarra.aqa.dto.ExecutionResult;
+import com.venuyarra.aqa.dto.SeleniumCommand;
 import com.venuyarra.aqa.dto.ValidationCommand;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by NIKOLAI on 22.09.2016.
  */
-public class CommandsExecutionTest extends BaseTest {
+public class CommandsExecutionIT extends BaseTest {
 
     @Autowired
     TestSuiteProcessor testSuiteProcessor;
@@ -91,6 +97,27 @@ public class CommandsExecutionTest extends BaseTest {
                 "https://www.yahoo.com/news/",
                 "Invalid current URL"
         );
+    }
+
+    @Test
+    public void severalCommandsTest() {
+        final WebDriver webDriver = getWebDriverFactory().getWebDriver("firefox");
+
+        WebDriverCommandExecutor commandExecutor = new WebDriverCommandExecutor(webDriver);
+        webDriver.get("https://www.yahoo.com/");
+
+        List<SeleniumCommand> commandList = new ArrayList<>();
+        commandList.addAll(Arrays.asList(createValidationCommand(), createEnterCommand(), createClickCommand()));
+
+        List<ClientResponse> clientResponseList =
+                commandList
+                        .stream()
+                        .map(seleniumCommand -> seleniumCommand.execute(commandExecutor))
+                        .collect(Collectors.toList());
+
+        clientResponseList.forEach(System.out::println);
+
+        webDriver.quit();
     }
 
 
