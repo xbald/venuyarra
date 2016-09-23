@@ -51,6 +51,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             assertThat(webElement, should(displayed()).whileWaitingUntil(timeoutHasExpired(SECONDS.toMillis(2))));
             webElement.click();
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
+            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);
@@ -72,6 +73,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             webElement.clear();
             webElement.sendKeys(command.getValue());
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
+            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);
@@ -95,6 +97,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
                     expectedText.equals(text)
             );
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
+            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);
@@ -115,6 +118,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             Select select = new Select(webElement);
             select.selectByValue(command.getValue());
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
+            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);

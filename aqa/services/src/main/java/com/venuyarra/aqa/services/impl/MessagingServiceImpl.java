@@ -1,17 +1,13 @@
 package com.venuyarra.aqa.services.impl;
 
 import com.venuyarra.aqa.dto.BrowserType;
-import com.venuyarra.aqa.dto.TestCase;
 import com.venuyarra.aqa.dto.TestSuite;
 import com.venuyarra.aqa.services.MessagingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.TextMessage;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import javax.xml.bind.JAXB;
 import java.io.StringWriter;
 
 /**
@@ -26,20 +22,14 @@ public class MessagingServiceImpl implements MessagingService {
         aqaJmsTemplate.send(
                 session -> {
                     TextMessage message = session.createTextMessage();
-                    JAXBContext jaxbContext = null;
-                    try {
-                        jaxbContext = JAXBContext.newInstance(TestCase.class);
-                        Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-                        StringWriter sw = new StringWriter();
-                        jaxbMarshaller.marshal(testSuite, sw);
+                    StringWriter sw = new StringWriter();
+                    JAXB.marshal(testSuite, sw);
+                    message.setText(sw.toString());
 
-                        message.setText(sw.toString());
-                        message.setStringProperty("clientId", clientId);
-                        message.setStringProperty("browser", browser.toString());
-                    } catch (JAXBException e) {
-                        e.printStackTrace();
-                    }
+                    message.setStringProperty("clientId", clientId);
+                    message.setStringProperty("browser", browser.toString());
+
                     return message;
                 }
         );
