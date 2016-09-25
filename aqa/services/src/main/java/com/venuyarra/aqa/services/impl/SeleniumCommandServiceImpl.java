@@ -20,9 +20,8 @@ public class SeleniumCommandServiceImpl implements SeleniumCommandService {
     @Override
     public SeleniumCommand get(Long id) {
         final SeleniumCommand seleniumCommand = seleniumCommandDao.get(id);
-        final Parameter parameter = parameterDao.get(seleniumCommand.getParameter());
-        seleniumCommand.setLocatorValue(parameter.getLocatorValue());
-        seleniumCommand.setLocatorType(parameter.getLocatorValue());
+        final List<Parameter> parameters = parameterDao.get(seleniumCommand.getParameter());
+        seleniumCommand.setLocatorList(parameters);
         return seleniumCommand;
     }
 
@@ -30,9 +29,8 @@ public class SeleniumCommandServiceImpl implements SeleniumCommandService {
     public  List<SeleniumCommand> getAllByTestCaseId(Long testCaseId) {
         final List<SeleniumCommand> commandList = seleniumCommandDao.getByTestCaseId(testCaseId);
         for (SeleniumCommand seleniumCommand : commandList) {
-            final Parameter parameter = parameterDao.get(seleniumCommand.getParameter());
-            seleniumCommand.setLocatorValue(parameter.getLocatorValue());
-            seleniumCommand.setLocatorType(parameter.getLocatorType());
+            final List<Parameter> parameters = parameterDao.get(seleniumCommand.getParameter());
+            seleniumCommand.setLocatorList(parameters);
         }
         return commandList;
     }

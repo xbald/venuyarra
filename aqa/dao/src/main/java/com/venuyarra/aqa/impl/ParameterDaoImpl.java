@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by NIKOLAI on 19.09.2016.
@@ -18,8 +19,8 @@ public class ParameterDaoImpl extends JdbcDaoSupport implements ParameterDao {
     private static final ParameterMapper MAPPER = new ParameterMapper();
 
     @Override
-    public Parameter get(Long id) {
-        return getJdbcTemplate().queryForObject(QUERY, MAPPER, id);
+    public List<Parameter> get(Long id) {
+        return getJdbcTemplate().query(QUERY, MAPPER, id);
     }
 
     public static class ParameterMapper implements RowMapper<Parameter> {

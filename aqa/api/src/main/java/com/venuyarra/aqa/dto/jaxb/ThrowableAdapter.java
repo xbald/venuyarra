@@ -28,7 +28,6 @@ public class ThrowableAdapter extends XmlAdapter<String, Throwable> {
         byte[] serializedBytes = hexAdapter.unmarshal(v);
         ByteArrayInputStream bais = new ByteArrayInputStream(serializedBytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
-        Throwable result = (Throwable) ois.readObject();
-        return result;
+        return (Throwable) ois.readObject();
     }
 }
