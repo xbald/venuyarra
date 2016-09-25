@@ -47,7 +47,7 @@ public class TestSuiteProcessorImpl implements TestSuiteProcessor {
                             jmsMessageSender.sendCommandResult(clientResponse, clientId, browser);
                         } catch (JmsException jmsException) {
                             //TODO Probably here should be some mechanism of storing message to temp.txt for further resending
-                            logger.error("Unable to send mssageto server" + clientResponse, jmsException);
+                            logger.error("Unable to send message to server" + clientResponse, jmsException);
                             Throwables.propagate(jmsException);
                         }
                     }
