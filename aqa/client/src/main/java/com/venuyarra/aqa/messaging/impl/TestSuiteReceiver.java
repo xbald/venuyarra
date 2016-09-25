@@ -11,6 +11,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import javax.xml.bind.JAXB;
+import java.io.StringReader;
 
 /**
  * Created by NIKOLAI on 19.09.2016.
@@ -24,11 +25,16 @@ public class TestSuiteReceiver implements MessageListener {
         try {
             if (message instanceof TextMessage) {
                 final String testSuiteXml = ((TextMessage) message).getText();
-                TestSuite testSuite = JAXB.unmarshal(testSuiteXml, TestSuite.class);
+                TestSuite testSuite = JAXB.unmarshal(new StringReader(testSuiteXml), TestSuite.class);
                 final String browser = message.getStringProperty("browser");
                 final String url = message.getStringProperty("url");
                 final String clientId = message.getStringProperty("clientId");
+                logger.debug(
+                        "Received message for clientId='{}', url={}, text={}",
+                        clientId, url, testSuiteXml
+                );
                 try {
+                    logger.debug("Processing suite '{}' id = {}", testSuite.getTitle(), testSuite.getId());
                     testSuiteProcessor.processTestSuite(testSuite, clientId, browser, url);
                 } catch (Throwable e) {
                     //here we need just log error because all actions done even with error

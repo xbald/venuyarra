@@ -19,4 +19,9 @@ public class ClickCommand extends SeleniumCommand {
     public ClientResponse execute(SeleniumCommandExecutor executor) {
         return executor.execute(this);
     }
+
+    @Override
+    public String toString() {
+        return "ClickCommand{ " + super.toString();
+    }
 }

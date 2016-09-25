@@ -30,4 +30,12 @@ public class SelectCommand extends SeleniumCommand {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "SelectCommand{" +
+                "value='" + value + '\'' +
+                ", " +
+                super.toString();
+    }
 }

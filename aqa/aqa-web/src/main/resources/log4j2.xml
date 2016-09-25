@@ -4,17 +4,10 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
         </Console>
-        <File name="aqaFile" fileName="logs/app.log">
-            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
-        </File>
-        <Async name="Async">
-            <AppenderRef ref="aqaFile"/>
-        </Async>
     </Appenders>
     <Loggers>
-        <Root level="trace" additivity="false">
+        <Root level="debug" additivity="false">
             <AppenderRef ref="console"/>
-            <AppenderRef ref="aqaFile"/>
         </Root>
     </Loggers>
 </Configuration>

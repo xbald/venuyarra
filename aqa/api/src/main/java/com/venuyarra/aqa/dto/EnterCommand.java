@@ -30,4 +30,11 @@ public class EnterCommand extends SeleniumCommand {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "EnterCommand{" +
+                "value='" + value + '\'' +
+                ", " + super.toString();
+    }
 }

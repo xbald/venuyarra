@@ -34,12 +34,15 @@ public class TestSuiteProcessorImpl implements TestSuiteProcessor {
             webDriver = webDriverFactory.getWebDriver(browser);
             WebDriverCommandExecutor webDriverCommandExecutor = new WebDriverCommandExecutor(webDriver);
             for (TestCase aCase : testCaseList) {
+                logger.debug("Processing test case id={} title='{}'", testCase.getId(), testCase.getTitle());
                 List<SeleniumCommand> seleniumCommandList = aCase.getCommandList();
                 if (!seleniumCommandList.isEmpty()) {
                     webDriver.get(url);
                     for (SeleniumCommand seleniumCommand : seleniumCommandList) {
+                        logger.debug("Executing command {} ", seleniumCommand);
                         final ClientResponse clientResponse = seleniumCommand.execute(webDriverCommandExecutor);
                         try {
+                            logger.debug("Result obtained {}", clientResponse);
                             jmsMessageSender.sendCommandResult(clientResponse, clientId, browser);
                         } catch (JmsException jmsException) {
                             //TODO Probably here should be some mechanism of storing message to temp.txt for further resending

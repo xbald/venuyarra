@@ -4,9 +4,9 @@ package com.venuyarra.aqa.dto;
  * Created by NIKOLAI on 18.09.2016.
  */
 public enum BrowserType {
-    IE("ie"),
-    FIREFOX("firefox"),
-    CHROME("googlechrome");
+    IE("IE"),
+    FIREFOX("FIREFOX"),
+    CHROME("GOOGLECHROME");
     private final String value;
 
     BrowserType(String value) {

@@ -16,7 +16,7 @@ import java.io.StringWriter;
 /**
  * Created by NIKOLAI on 19.09.2016.
  */
-@Transactional
+//@Transactional
 public class JmsMessageSenderImpl implements JmsMessageSender {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private JmsTemplate aqaJmsTemplate;
@@ -33,6 +33,7 @@ public class JmsMessageSenderImpl implements JmsMessageSender {
                         message.setText(text);
                         message.setStringProperty("clientId", clientId);
                         message.setStringProperty("browser", browser);
+                        logger.debug("Sending response to server as xml {}", text);
                         return message;
                     } catch (JMSException e) {
                         //TODO Probably here should be some mechanism of storing message to temp.txt for further resending

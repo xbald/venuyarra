@@ -57,4 +57,14 @@ public class ClientResponse {
     public void setReturnedValue(String returnedValue) {
         this.returnedValue = returnedValue;
     }
+
+    @Override
+    public String toString() {
+        return "ClientResponse{" +
+                "commandId=" + commandId +
+                ", throwable=" + throwable +
+                ", executionResult=" + executionResult +
+                ", returnedValue='" + returnedValue + '\'' +
+                '}';
+    }
 }

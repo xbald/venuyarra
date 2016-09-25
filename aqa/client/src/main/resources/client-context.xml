@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation=
                "http://www.springframework.org/schema/beans
-               http://www.springframework.org/schema/beans/spring-beans.xsd
-               http://www.springframework.org/schema/context
-               http://www.springframework.org/schema/context/spring-context.xsd
-               http://www.springframework.org/schema/tx
-               http://www.springframework.org/schema/tx/spring-tx.xsd">
+               http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+<!--
     <context:component-scan base-package="com.venuyarra.aqa"/>
     <tx:annotation-driven transaction-manager="transactionManager"/>
+-->
 
     <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
         <property name="locations">
@@ -48,7 +44,7 @@
         -->
     </bean>
     <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-        <property name="brokerURL" value="${jms.broker.url}"/>
+        <property name="brokerURL" value="failover:(${jms.broker.url})?initialReconnectDelay=2000"/>
         <property name="clientID" value="${clientId}"/>
     </bean>
 
@@ -56,7 +52,7 @@
         <property name="targetConnectionFactory" ref="xaFactory"/>
     </bean>
 
-    <!-- Configure the ActiveMQ Queue for accounts -->
+    <!-- Configure the ActiveMQ Queue for results and suites  -->
     <bean id="resultsQueue" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg value="${jms.results.queue.name}"/>
     </bean>
@@ -69,7 +65,9 @@
         <property name="connectionFactory" ref="connectionFactoryBean"/>
         <property name="defaultDestination" ref="resultsQueue"/>
         <property name="receiveTimeout" value="3000"/>
+<!--
         <property name="sessionTransacted" value="true"/>
+-->
     </bean>
 
     <bean id="jmsMessageSender" class="com.venuyarra.aqa.messaging.impl.JmsMessageSenderImpl">
@@ -78,7 +76,9 @@
 
     <bean id="myDurableConsumer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="connectionFactoryBean"/>
+<!--
         <property name="sessionTransacted" value="true"/>
+-->
         <property name="subscriptionDurable" value="true"/>
         <property name="durableSubscriptionName" value="${clientId}"/>
         <property name="destination" ref="suitesQueue"/>

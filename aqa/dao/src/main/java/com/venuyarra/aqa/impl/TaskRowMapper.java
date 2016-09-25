@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 
 /**
  * Created by NIKOLAI on 23.09.2016.
@@ -16,7 +17,11 @@ public class TaskRowMapper implements RowMapper<TestTask> {
         final TestTask testTask = new TestTask();
 
         testTask.setId(rs.getLong("id"));
-        testTask.setBrowserType(BrowserType.valueOf(rs.getString("browser_type")));
+        testTask.setBrowserType(
+                BrowserType.valueOf(
+                        rs.getString("browser_type").toUpperCase(Locale.ENGLISH)
+                )
+        );
         testTask.setClientId(rs.getString("client_id"));
         testTask.setStatus(rs.getString("status"));
         testTask.setCreationDate(rs.getDate("date_created"));

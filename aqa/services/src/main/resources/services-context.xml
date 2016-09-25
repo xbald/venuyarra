@@ -15,13 +15,17 @@
                http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd">
 
     <!-- Configure the ActiveMQ Queue Factory -->
-    <import resource="dao-context.xml"/>
+    <import resource="classpath:dao-context.xml"/>
 
 
-    <amq:broker useJmx="false" persistent="true">
+    <amq:broker useJmx="true" persistent="true">
         <amq:transportConnectors>
-            <amq:transportConnector name="" uri="${jms.broker.url}"/>
+            <amq:transportConnector name="tcp" uri="${jms.broker.url}"/>
         </amq:transportConnectors>
+
+        <amq:networkConnectors>
+            <amq:networkConnector uri="static:(tcp://0.0.0.0:61616)"/>
+        </amq:networkConnectors>
     </amq:broker>
 
     <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
@@ -47,6 +51,7 @@
           class="com.atomikos.jms.AtomikosConnectionFactoryBean"
           init-method="init"
           destroy-method="close">
+        <property name="maxPoolSize" value="50"/>
         <property name="uniqueResourceName" value="localhost"/>
         <property name="xaConnectionFactory" ref="xaFactory"/>
     </bean>

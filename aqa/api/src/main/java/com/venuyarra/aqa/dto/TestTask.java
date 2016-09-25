@@ -78,4 +78,18 @@ public class TestTask {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    @Override
+    public String toString() {
+        return "TestTask{" +
+                "id=" + id +
+                ", clientId='" + clientId + '\'' +
+                ", status='" + status + '\'' +
+                ", testSuiteId=" + testSuiteId +
+                ", browserType=" + browserType +
+                ", creationDate=" + creationDate +
+                ", finishDate=" + finishDate +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }

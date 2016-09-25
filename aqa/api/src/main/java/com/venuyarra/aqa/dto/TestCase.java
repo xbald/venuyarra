@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,5 +51,14 @@ public class TestCase {
 
     public void addCommand(SeleniumCommand command) {
         commandList.add(command);
+    }
+
+    @Override
+    public String toString() {
+        return "TestCase{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", commandList=" + commandList +
+                '}';
     }
 }

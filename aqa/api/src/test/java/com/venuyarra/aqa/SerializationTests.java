@@ -4,6 +4,7 @@ import com.venuyarra.aqa.dto.ClickCommand;
 import com.venuyarra.aqa.dto.ClientResponse;
 import com.venuyarra.aqa.dto.EnterCommand;
 import com.venuyarra.aqa.dto.ExecutionResult;
+import com.venuyarra.aqa.dto.Parameter;
 import com.venuyarra.aqa.dto.SelectCommand;
 import com.venuyarra.aqa.dto.TestCase;
 import com.venuyarra.aqa.dto.ValidationCommand;
@@ -127,8 +128,14 @@ public class SerializationTests {
         ValidationCommand command = new ValidationCommand();
         command.setId(3L);
         command.setExpectedResult("Expected Result");
-        command.setLocatorType("locator type");
-        command.setLocatorValue("locator value");
+        command.setLocatorList(
+                Arrays.asList(
+                        new Parameter(1L, "locT", "locV"),
+                        new Parameter(2L, "locT", "locV"),
+                        new Parameter(3L, "locT", "locV"),
+                        new Parameter(4L, "locT", "locV")
+                )
+        );
         return command;
     }
 
@@ -136,8 +143,14 @@ public class SerializationTests {
         EnterCommand command = new EnterCommand();
         command.setId(1L);
         command.setValue("Enter Value");
-        command.setLocatorType("locator type");
-        command.setLocatorValue("locator value");
+        command.setLocatorList(
+                Arrays.asList(
+                        new Parameter(1L, "locT", "locV"),
+                        new Parameter(2L, "locT", "locV"),
+                        new Parameter(3L, "locT", "locV"),
+                        new Parameter(4L, "locT", "locV")
+                )
+        );
         return command;
     }
 
@@ -145,16 +158,28 @@ public class SerializationTests {
         SelectCommand command = new SelectCommand();
         command.setId(4L);
         command.setValue("Select Value");
-        command.setLocatorType("locator type");
-        command.setLocatorValue("locator value");
+        command.setLocatorList(
+                Arrays.asList(
+                        new Parameter(1L, "locT", "locV"),
+                        new Parameter(2L, "locT", "locV"),
+                        new Parameter(3L, "locT", "locV"),
+                        new Parameter(4L, "locT", "locV")
+                )
+        );
         return command;
     }
 
     private ClickCommand createClickCommand() {
         ClickCommand command = new ClickCommand();
         command.setId(2L);
-        command.setLocatorType("locator type");
-        command.setLocatorValue("locator value");
+        command.setLocatorList(
+                Arrays.asList(
+                        new Parameter(1L, "locT", "locV"),
+                        new Parameter(2L, "locT", "locV"),
+                        new Parameter(3L, "locT", "locV"),
+                        new Parameter(4L, "locT", "locV")
+                )
+        );
         return command;
     }
 }

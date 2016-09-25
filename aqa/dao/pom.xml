@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dao</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
 
     <dependencies>
@@ -47,6 +48,10 @@
         </dependency>
 
         <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-jta</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
@@ -76,6 +81,30 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+        <id>production</id>
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <!-- exclude log4j.properties -->
+                            <excludes>
+                                <exclude>**/log4j2.xml</exclude>
+                                <exclude>**/server_running.properties</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>

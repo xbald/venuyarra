@@ -5,22 +5,27 @@ import com.venuyarra.aqa.executor.SeleniumExecutable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by NIKOLAI on 18.09.2016.
  */
 @XmlRootElement(name = "command")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(propOrder = {"id", "locatorType", "locatorValue"})
+@XmlType(propOrder = {"id", "locatorList"})
 @XmlSeeAlso({ClickCommand.class, EnterCommand.class, ValidationCommand.class, SelectCommand.class})
 public abstract class SeleniumCommand implements SeleniumExecutable {
     private Long id;
     private Long parameter;
-    private String locatorType;
-    private String locatorValue;
+    private List<Parameter> locatorList;
 
     @XmlElement(name = "id")
     public Long getId() {
@@ -39,22 +44,22 @@ public abstract class SeleniumCommand implements SeleniumExecutable {
         this.id = id;
     }
 
-    public void setLocatorType(String locatorType) {
-        this.locatorType = locatorType;
+    @XmlElementWrapper(name = "locators")
+    @XmlElement(name = "locator")
+    public List<Parameter> getLocatorList() {
+        return locatorList;
     }
 
-    public void setLocatorValue(String locatorValue) {
-        this.locatorValue = locatorValue;
+    public void setLocatorList(List<Parameter> locatorList) {
+        this.locatorList = locatorList;
     }
 
-    @XmlElement(name = "locatorType")
-    public String getLocatorType() {
-        return locatorType;
+    @Override
+    public String toString() {
+        final String locators =
+                locatorList.stream().map(Parameter::toString).collect(Collectors.joining(","));
+        return "id=" + id +
+                ", locators=" + locators +
+                "}";
     }
-
-    @XmlElement(name = "locatorValue")
-    public String getLocatorValue() {
-        return locatorValue;
-    }
-
 }
