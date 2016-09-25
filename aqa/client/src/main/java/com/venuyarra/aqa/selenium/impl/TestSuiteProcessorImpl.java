@@ -27,20 +27,21 @@ public class TestSuiteProcessorImpl implements TestSuiteProcessor {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void processTestSuite(TestSuite testCase, String clientId, String browser, String url) {
-        List<TestCase> testCaseList = testCase.getTestCaseList();
+    public void processTestSuite(TestSuite testSuite, String clientId, String browser, String url) {
+        List<TestCase> testCaseList = testSuite.getTestCaseList();
         WebDriver webDriver = null;
         try {
             webDriver = webDriverFactory.getWebDriver(browser);
             WebDriverCommandExecutor webDriverCommandExecutor = new WebDriverCommandExecutor(webDriver);
-            for (TestCase aCase : testCaseList) {
-                logger.debug("Processing test case id={} title='{}'", testCase.getId(), testCase.getTitle());
-                List<SeleniumCommand> seleniumCommandList = aCase.getCommandList();
+            for (TestCase testCase : testCaseList) {
+                logger.debug("Processing test case id={} title='{}'", testSuite.getId(), testSuite.getTitle());
+                List<SeleniumCommand> seleniumCommandList = testCase.getCommandList();
                 if (!seleniumCommandList.isEmpty()) {
                     webDriver.get(url);
                     for (SeleniumCommand seleniumCommand : seleniumCommandList) {
                         logger.debug("Executing command {} ", seleniumCommand);
                         final ClientResponse clientResponse = seleniumCommand.execute(webDriverCommandExecutor);
+                        clientResponse.setSuiteId(testSuite.getId());
                         try {
                             logger.debug("Result obtained {}", clientResponse);
                             jmsMessageSender.sendCommandResult(clientResponse, clientId, browser);
