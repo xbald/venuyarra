@@ -87,10 +87,8 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     public ClientResponse execute(ValidationCommand command) {
         ClientResponse clientResponse = new ClientResponse();
 
-        final WebElement webElement = locateElement(command.getLocatorList());
-
         try {
-            final String text = webElement.getText();
+            final String text = getActualResult(command);
             final String expectedText = command.getExpectedResult();
             assertThat(
                     "Values not equal. Expected '" + expectedText + "' but found '" + text,
@@ -103,6 +101,20 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             clientResponse.setThrowable(throwable);
         }
         return clientResponse;
+    }
+
+    private String getActualResult(ValidationCommand command) {
+        final WebElement webElement = locateElement(command.getLocatorList());
+        String attr = command.getAttribute();
+        if (attr == null) {
+            return webElement.getText();
+        } else {
+            if (attr.toLowerCase().equals("innerhtml")) {
+                return webElement.getAttribute("innerHTML");
+            } else {
+                return webElement.getAttribute(attr);
+            }
+        }
     }
 
     @Override
