@@ -5,11 +5,6 @@
                "http://www.springframework.org/schema/beans
                http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<!--
-    <context:component-scan base-package="com.venuyarra.aqa"/>
-    <tx:annotation-driven transaction-manager="transactionManager"/>
--->
-
     <bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -29,27 +24,15 @@
         <property name="jmsMessageSender" ref="jmsMessageSender"/>
     </bean>
 
-    <bean id="webDriverFactory" class="com.venuyarra.aqa.selenium.SeleniumFactory">
-        <!--
-                    <constructor-arg name="browserType" value="${browserType}"/>
-                            <constructor-arg name="isRemote" value="${isRemote}"/>
-                            <constructor-arg name="hubUrl" value="${hubUrl}"/>
-                            <constructor-arg name="testSiteUrl" value="${testSiteUrl}"/>
-                            <constructor-arg name="browserVersion" value="${browserVersion}"/>
-                            <constructor-arg name="osName" value="${osName}"/>
-                            <constructor-arg name="elementWaitSeconds" value="${elementWaitSeconds}"/>
-                            <constructor-arg name="ieDriverPath" value="${webdriver.ie.driver}"/>
-                            <constructor-arg name="edgeDriverPath" value="${webdriver.edge.driver}"/>
-                            <constructor-arg name="chromeDriverPath" value="${webdriver.chrome.driver}"/>
-        -->
-    </bean>
+    <bean id="webDriverFactory" class="com.venuyarra.aqa.selenium.SeleniumFactory"/>
+
     <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
         <property name="brokerURL" value="failover:(${jms.broker.url})?initialReconnectDelay=2000"/>
-        <property name="clientID" value="${clientId}"/>
     </bean>
 
     <bean id="connectionFactoryBean" class="org.springframework.jms.connection.SingleConnectionFactory">
         <property name="targetConnectionFactory" ref="xaFactory"/>
+        <property name="clientId" value="${clientId}"/>
     </bean>
 
     <!-- Configure the ActiveMQ Queue for results and suites  -->
@@ -65,9 +48,9 @@
         <property name="connectionFactory" ref="connectionFactoryBean"/>
         <property name="defaultDestination" ref="resultsQueue"/>
         <property name="receiveTimeout" value="3000"/>
-<!--
-        <property name="sessionTransacted" value="true"/>
--->
+        <!--
+                <property name="sessionTransacted" value="true"/>
+        -->
     </bean>
 
     <bean id="jmsMessageSender" class="com.venuyarra.aqa.messaging.impl.JmsMessageSenderImpl">
@@ -76,9 +59,7 @@
 
     <bean id="myDurableConsumer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="connectionFactoryBean"/>
-<!--
-        <property name="sessionTransacted" value="true"/>
--->
+        <property name="autoStartup" value="false"/>
         <property name="subscriptionDurable" value="true"/>
         <property name="durableSubscriptionName" value="${clientId}"/>
         <property name="destination" ref="suitesQueue"/>

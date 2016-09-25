@@ -97,28 +97,6 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <excludeScope>system</excludeScope>
-                            <excludes>META-INF/*.SF</excludes>
-                            <excludes>META-INF/*.DSA</excludes>
-                            <excludes>META-INF/*.RSA</excludes>
-                            <excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -130,6 +108,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <finalName>client-app</finalName>
                             <filters>
                                 <filter>
                                     <artifact>*</artifact>

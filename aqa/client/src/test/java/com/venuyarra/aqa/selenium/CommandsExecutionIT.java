@@ -4,6 +4,7 @@ import com.venuyarra.aqa.dto.ClickCommand;
 import com.venuyarra.aqa.dto.ClientResponse;
 import com.venuyarra.aqa.dto.EnterCommand;
 import com.venuyarra.aqa.dto.ExecutionResult;
+import com.venuyarra.aqa.dto.Parameter;
 import com.venuyarra.aqa.dto.SeleniumCommand;
 import com.venuyarra.aqa.dto.ValidationCommand;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +14,7 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,8 +63,14 @@ public class CommandsExecutionIT extends BaseTest {
         );
 
         ValidationCommand validationCommand = createValidationCommand();
-        validationCommand.setLocatorType("xpath");
-        validationCommand.setLocatorValue("//input[@id='uh-search-box']/following-sibling::div/div/ul/li[1]//b");
+        validationCommand.setLocatorList(
+                Collections.singletonList(
+                        new Parameter(
+                                4L,
+                                "xpath",
+                                "//input[@id='uh-search-box']/following-sibling::div/div/ul/li[1]//b")
+                )
+        );
         validationCommand.setExpectedResult("google");
 
         final ClientResponse response = validationCommand.execute(commandExecutor);
@@ -127,8 +135,7 @@ public class CommandsExecutionIT extends BaseTest {
 
     private EnterCommand createEnterCommand() {
         EnterCommand enterCommand = new EnterCommand();
-        enterCommand.setLocatorType("id");
-        enterCommand.setLocatorValue("uh-search-box");
+        enterCommand.setLocatorList(Collections.singletonList(new Parameter(1L, "id", "uh-search-box")));
         enterCommand.setValue("Google");
 
         return enterCommand;
@@ -137,16 +144,29 @@ public class CommandsExecutionIT extends BaseTest {
     private ClickCommand createClickCommand() {
         ClickCommand clickCommand = new ClickCommand();
 
-        clickCommand.setLocatorType("xpath");
-        clickCommand.setLocatorValue("//div[@class='App-Bd']//a[@href='https://www.yahoo.com/news/']");
+        clickCommand.setLocatorList(
+                Collections.singletonList(
+                        new Parameter(
+                                2L,
+                                "xpath",
+                                "//div[@class='App-Bd']//a[@href='https://www.yahoo.com/news/']"
+                        )
+                )
+        );
 
         return clickCommand;
     }
 
     private ValidationCommand createValidationCommand() {
         ValidationCommand validationCommand = new ValidationCommand();
-        validationCommand.setLocatorType("xpath");
-        validationCommand.setLocatorValue("//div[@id='mega-topbar']/ul[1]/li[1]/a");
+        validationCommand.setLocatorList(
+                Collections.singletonList(
+                        new Parameter(
+                                2L,
+                                "xpath",
+                                "//div[@id='mega-topbar']/ul[1]/li[1]/a")
+                )
+        );
         validationCommand.setExpectedResult("Home");
         return validationCommand;
     }
