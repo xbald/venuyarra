@@ -37,4 +37,23 @@ public class EnterCommand extends SeleniumCommand {
                 "value='" + value + '\'' +
                 ", " + super.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EnterCommand)) return false;
+        if (!super.equals(o)) return false;
+
+        EnterCommand that = (EnterCommand) o;
+
+        return getValue().equals(that.getValue());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getValue().hashCode();
+        return result;
+    }
 }

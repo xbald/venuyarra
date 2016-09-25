@@ -67,4 +67,25 @@ public class ClientResponse {
                 ", returnedValue='" + returnedValue + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ClientResponse)) return false;
+
+        ClientResponse that = (ClientResponse) o;
+
+        if (!getCommandId().equals(that.getCommandId())) return false;
+        if (getExecutionResult() != that.getExecutionResult()) return false;
+        return getReturnedValue() != null ? getReturnedValue().equals(that.getReturnedValue()) : that.getReturnedValue() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getCommandId().hashCode();
+        result = 31 * result + getExecutionResult().hashCode();
+        result = 31 * result + (getReturnedValue() != null ? getReturnedValue().hashCode() : 0);
+        return result;
+    }
 }

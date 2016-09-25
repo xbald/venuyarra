@@ -60,4 +60,25 @@ public class Parameter {
                 ", locatorValue='" + locatorValue + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Parameter)) return false;
+
+        Parameter parameter = (Parameter) o;
+
+        if (!getId().equals(parameter.getId())) return false;
+        if (!getLocatorType().equals(parameter.getLocatorType())) return false;
+        return getLocatorValue().equals(parameter.getLocatorValue());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getLocatorType().hashCode();
+        result = 31 * result + getLocatorValue().hashCode();
+        return result;
+    }
 }

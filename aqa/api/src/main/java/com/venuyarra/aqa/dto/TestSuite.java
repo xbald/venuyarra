@@ -51,4 +51,25 @@ public class TestSuite {
     public void addTestCase(TestCase testCase) {
         testCaseList.add(testCase);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TestSuite)) return false;
+
+        TestSuite testSuite = (TestSuite) o;
+
+        if (!getId().equals(testSuite.getId())) return false;
+        if (getTitle() != null ? !getTitle().equals(testSuite.getTitle()) : testSuite.getTitle() != null) return false;
+        return getTestCaseList().equals(testSuite.getTestCaseList());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + (getTitle() != null ? getTitle().hashCode() : 0);
+        result = 31 * result + getTestCaseList().hashCode();
+        return result;
+    }
 }

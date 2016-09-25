@@ -61,4 +61,25 @@ public class TestCase {
                 ", commandList=" + commandList +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TestCase)) return false;
+
+        TestCase testCase = (TestCase) o;
+
+        if (!getId().equals(testCase.getId())) return false;
+        if (getTitle() != null ? !getTitle().equals(testCase.getTitle()) : testCase.getTitle() != null) return false;
+        return getCommandList().equals(testCase.getCommandList());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + (getTitle() != null ? getTitle().hashCode() : 0);
+        result = 31 * result + getCommandList().hashCode();
+        return result;
+    }
 }

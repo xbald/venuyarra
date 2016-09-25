@@ -62,4 +62,26 @@ public abstract class SeleniumCommand implements SeleniumExecutable {
                 ", locators=" + locators +
                 "}";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SeleniumCommand)) return false;
+
+        SeleniumCommand that = (SeleniumCommand) o;
+
+        if (!getId().equals(that.getId())) return false;
+        if (getParameter() != null ? !getParameter().equals(that.getParameter()) : that.getParameter() != null)
+            return false;
+        return getLocatorList().equals(that.getLocatorList());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + (getParameter() != null ? getParameter().hashCode() : 0);
+        result = 31 * result + getLocatorList().hashCode();
+        return result;
+    }
 }

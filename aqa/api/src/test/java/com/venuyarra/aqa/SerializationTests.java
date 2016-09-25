@@ -7,11 +7,12 @@ import com.venuyarra.aqa.dto.ExecutionResult;
 import com.venuyarra.aqa.dto.Parameter;
 import com.venuyarra.aqa.dto.SelectCommand;
 import com.venuyarra.aqa.dto.TestCase;
+import com.venuyarra.aqa.dto.TestSuite;
 import com.venuyarra.aqa.dto.ValidationCommand;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -32,7 +33,8 @@ public class SerializationTests {
         final String marshalled = sw.toString();
 
         final ValidationCommand unmarshalled = JAXB.unmarshal(new StringReader(marshalled), ValidationCommand.class);
-        System.out.println(unmarshalled);
+
+        Assert.assertEquals(command, unmarshalled, "Deserialized object differs from original");
     }
 
     @Test
@@ -45,7 +47,7 @@ public class SerializationTests {
         final String marshalled = sw.toString();
 
         final ClickCommand unmarshalled = JAXB.unmarshal(new StringReader(marshalled), ClickCommand.class);
-        System.out.println(unmarshalled);
+        Assert.assertEquals(command, unmarshalled, "Deserialized object differs from original");
     }
 
     @Test
@@ -58,7 +60,7 @@ public class SerializationTests {
         final String marshalled = sw.toString();
 
         final SelectCommand unmarshalled = JAXB.unmarshal(new StringReader(marshalled), SelectCommand.class);
-        System.out.println(unmarshalled);
+        Assert.assertEquals(command, unmarshalled, "Deserialized object differs from original");
     }
 
     @Test
@@ -71,7 +73,7 @@ public class SerializationTests {
         final String marshalled = sw.toString();
 
         final EnterCommand unmarshalled = JAXB.unmarshal(new StringReader(marshalled), EnterCommand.class);
-        System.out.println(unmarshalled);
+        Assert.assertEquals(command, unmarshalled, "Deserialized object differs from original");
     }
 
     @Test
@@ -92,15 +94,38 @@ public class SerializationTests {
 
         JAXB.marshal(testCase, sw);
         final String marshalled = sw.toString();
-        System.out.println(marshalled);
 
         final TestCase unmarshalled = JAXB.unmarshal(new StringReader(marshalled), TestCase.class);
-        System.out.println(unmarshalled);
+        Assert.assertEquals(testCase, unmarshalled, "Deserialized object differs from original");
     }
 
     @Test
     public void testTestSuiteSerialization() {
+        TestSuite testSuite = new TestSuite();
+        testSuite.setId(123L);
+        testSuite.setTitle("Test Suite Title");
+        for (int i = 0; i < 3; i++) {
+            TestCase testCase = new TestCase();
+            testCase.setTitle("Test Case Title" + i);
+            testCase.setId(1L);
 
+            testCase.setCommandList(
+                    Arrays.asList(
+                            createValidationCommand(),
+                            createClickCommand(),
+                            createSelectCommand(),
+                            createEnterCommand()
+                    )
+            );
+            testSuite.addTestCase(testCase);
+        }
+        StringWriter sw = new StringWriter();
+        JAXB.marshal(testSuite, sw);
+        String marshalled = sw.toString();
+
+        final TestSuite unmarshalled = JAXB.unmarshal(new StringReader(marshalled), TestSuite.class);
+
+        Assert.assertEquals(testSuite, unmarshalled, "Deserialized object differs from original");
     }
 
     @Test
@@ -118,10 +143,10 @@ public class SerializationTests {
 
         JAXB.marshal(clientResponse, sw);
         final String marshaled = sw.toString();
-        System.out.println(marshaled);
-
         final ClientResponse unmarshalled = JAXB.unmarshal(new StringReader(marshaled), ClientResponse.class);
-        System.out.println(unmarshalled);
+
+        Assert.assertEquals(clientResponse, unmarshalled, "Deserialized object differs from original");
+
     }
 
     private ValidationCommand createValidationCommand() {
