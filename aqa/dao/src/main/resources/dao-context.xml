@@ -74,7 +74,7 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="resultDao" class="com.venuyarra.aqa.impl.ResultDaoImpl">
+    <bean id="resultDao" class="com.venuyarra.aqa.impl.ClientResultDaoImpl">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 

@@ -2,7 +2,6 @@ package com.venuyarra.aqa.services.impl;
 
 import com.venuyarra.aqa.dto.ClientResponse;
 import com.venuyarra.aqa.services.ResultsService;
-import com.venuyarra.aqa.services.impl.ResultsServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.JMSException;
@@ -26,7 +25,7 @@ public class ResultsProcessor implements MessageListener{
 
                 ClientResponse clientResponse = JAXB.unmarshal(textClientResult, ClientResponse.class);
 
-                resultService.addResult(clientResponse);
+                resultService.saveOrUpdateResult(clientResponse);
 
             } catch (JMSException e) {
                 throw new RuntimeException(e);

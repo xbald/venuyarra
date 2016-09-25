@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import ru.yandex.qatools.htmlelements.element.Select;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -41,17 +42,20 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     @Override
     public ClientResponse execute(ClickCommand command) {
         ClientResponse clientResponse = new ClientResponse();
+        clientResponse.setStarted(new Date());
+        clientResponse.setCommandId(command.getId());
         logger.debug("Executing command");
         final WebElement webElement = locateElement(command.getLocatorList());
         try {
             assertThat(webElement, should(displayed()).whileWaitingUntil(timeoutHasExpired(SECONDS.toMillis(2))));
             webElement.click();
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
-            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);
         }
+
+        clientResponse.setFinished(new Date());
         return clientResponse;
     }
 
@@ -67,6 +71,8 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     @Override
     public ClientResponse execute(EnterCommand command) {
         ClientResponse clientResponse = new ClientResponse();
+        clientResponse.setStarted(new Date());
+        clientResponse.setCommandId(command.getId());
 
         final WebElement webElement = locateElement(command.getLocatorList());
 
@@ -75,31 +81,36 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             webElement.clear();
             webElement.sendKeys(command.getValue());
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
-            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);
         }
+
+        clientResponse.setFinished(new Date());
         return clientResponse;
     }
 
     @Override
     public ClientResponse execute(ValidationCommand command) {
         ClientResponse clientResponse = new ClientResponse();
+        clientResponse.setCommandId(command.getId());
+        clientResponse.setStarted(new Date());
 
         try {
             final String text = getActualResult(command);
             final String expectedText = command.getExpectedResult();
+            clientResponse.setReturnedValue(expectedText);
             assertThat(
                     "Values not equal. Expected '" + expectedText + "' but found '" + text,
                     expectedText.equals(text)
             );
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
-            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);
         }
+
+        clientResponse.setFinished(new Date());
         return clientResponse;
     }
 
@@ -120,6 +131,8 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     @Override
     public ClientResponse execute(SelectCommand command) {
         ClientResponse clientResponse = new ClientResponse();
+        clientResponse.setCommandId(command.getId());
+        clientResponse.setStarted(new Date());
 
         final WebElement webElement = locateElement(command.getLocatorList());
 
@@ -128,11 +141,12 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             Select select = new Select(webElement);
             select.selectByValue(command.getValue());
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
-            clientResponse.setCommandId(command.getId());
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
             clientResponse.setThrowable(throwable);
         }
+
+        clientResponse.setFinished(new Date());
         return clientResponse;
     }
 
