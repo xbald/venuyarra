@@ -12,6 +12,9 @@ public class MainFrame extends JFrame {
         setSize(new Dimension(300, 200));
         setState(Frame.NORMAL);
         setVisible(true);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+        setLocationRelativeTo(null);
     }
 
 }
