@@ -20,6 +20,7 @@ public class Launcher {
         );
         String jarName = file.getName();
         String clientId = URLDecoder.decode(jarName, "UTF-8");
+        clientId = clientId.substring(0, clientId.lastIndexOf("."));
         System.out.println("ClientId=" + clientId);
 
         String absolutePath = file.getAbsolutePath();

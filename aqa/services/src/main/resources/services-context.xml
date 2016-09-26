@@ -18,6 +18,7 @@
     <import resource="classpath:dao-context.xml"/>
 
 
+<!--
     <amq:broker useJmx="true" persistent="true">
         <amq:transportConnectors>
             <amq:transportConnector name="tcp" uri="${jms.broker.url}"/>
@@ -27,6 +28,7 @@
             <amq:networkConnector uri="static:(tcp://0.0.0.0:61616)"/>
         </amq:networkConnectors>
     </amq:broker>
+-->
 
     <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
         <property name="brokerURL" value="failover:${jms.broker.url}"/>

@@ -42,7 +42,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     @Override
     public ClientResponse execute(ClickCommand command) {
         ClientResponse clientResponse = new ClientResponse();
-        clientResponse.setStarted(new Date());
+        clientResponse.setStartedAt(new Date());
         clientResponse.setCommandId(command.getId());
         logger.debug("Executing command");
         final WebElement webElement = locateElement(command.getLocatorList());
@@ -55,7 +55,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             clientResponse.setThrowable(throwable);
         }
 
-        clientResponse.setFinished(new Date());
+        clientResponse.setFinishedAt(new Date());
         return clientResponse;
     }
 
@@ -71,7 +71,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     @Override
     public ClientResponse execute(EnterCommand command) {
         ClientResponse clientResponse = new ClientResponse();
-        clientResponse.setStarted(new Date());
+        clientResponse.setStartedAt(new Date());
         clientResponse.setCommandId(command.getId());
 
         final WebElement webElement = locateElement(command.getLocatorList());
@@ -86,7 +86,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             clientResponse.setThrowable(throwable);
         }
 
-        clientResponse.setFinished(new Date());
+        clientResponse.setFinishedAt(new Date());
         return clientResponse;
     }
 
@@ -94,12 +94,12 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     public ClientResponse execute(ValidationCommand command) {
         ClientResponse clientResponse = new ClientResponse();
         clientResponse.setCommandId(command.getId());
-        clientResponse.setStarted(new Date());
+        clientResponse.setStartedAt(new Date());
 
         try {
             final String text = getActualResult(command);
+            clientResponse.setReturnedValue(text);
             final String expectedText = command.getExpectedResult();
-            clientResponse.setReturnedValue(expectedText);
             assertThat(
                     "Values not equal. Expected '" + expectedText + "' but found '" + text,
                     expectedText.equals(text)
@@ -107,10 +107,11 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);
+            logger.debug("Validation failed with ", throwable);
             clientResponse.setThrowable(throwable);
         }
 
-        clientResponse.setFinished(new Date());
+        clientResponse.setFinishedAt(new Date());
         return clientResponse;
     }
 
@@ -132,7 +133,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
     public ClientResponse execute(SelectCommand command) {
         ClientResponse clientResponse = new ClientResponse();
         clientResponse.setCommandId(command.getId());
-        clientResponse.setStarted(new Date());
+        clientResponse.setStartedAt(new Date());
 
         final WebElement webElement = locateElement(command.getLocatorList());
 
@@ -146,7 +147,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             clientResponse.setThrowable(throwable);
         }
 
-        clientResponse.setFinished(new Date());
+        clientResponse.setFinishedAt(new Date());
         return clientResponse;
     }
 

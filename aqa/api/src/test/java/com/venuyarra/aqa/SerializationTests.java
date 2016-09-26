@@ -17,6 +17,7 @@ import javax.xml.bind.JAXBException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by NIKOLAI on 22.09.2016.
@@ -131,9 +132,12 @@ public class SerializationTests {
     @Test
     public void testClientResponseSerialization() {
         ClientResponse clientResponse = new ClientResponse();
+        clientResponse.setStartedAt(new Date());
         clientResponse.setCommandId(1L);
         clientResponse.setExecutionResult(ExecutionResult.FAILED);
         clientResponse.setReturnedValue("returned value");
+        clientResponse.setFinishedAt(new Date());
+        clientResponse.setSuiteId(444L);
         try {
             throw new RuntimeException("message");
         } catch (RuntimeException e) {

@@ -39,10 +39,10 @@ public class ClientResultDaoImpl extends JdbcDaoSupport implements ClientResultD
                 insertSql,
                 clientResponse.getSuiteId(),
                 clientResponse.getCommandId(),
-                clientResponse.getStarted(),
+                clientResponse.getStartedAt(),
                 returnedValue,
                 clientResponse.getExecutionResult().toString(),
-                clientResponse.getFinished());
+                clientResponse.getFinishedAt());
         clientResponse.setId((long) id);
         return clientResponse;
     }
@@ -58,10 +58,10 @@ public class ClientResultDaoImpl extends JdbcDaoSupport implements ClientResultD
                 insertSql,
                 clientResponse.getSuiteId(),
                 clientResponse.getCommandId(),
-                clientResponse.getStarted(),
+                clientResponse.getStartedAt(),
                 returnedValue,
                 clientResponse.getExecutionResult().toString(),
-                clientResponse.getFinished(),
+                clientResponse.getFinishedAt(),
                 clientResponse.getId()
         );
         clientResponse.setId((long) id);

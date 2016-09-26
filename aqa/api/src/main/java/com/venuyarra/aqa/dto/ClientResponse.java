@@ -16,15 +16,21 @@ import java.util.Date;
  */
 @XmlRootElement(name = "response")
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(name = "response", propOrder = {"id", "suiteId", "commandId", "executionResult", "returnedValue", "throwable"})
+@XmlType(
+        name = "response",
+        propOrder = {"id", "suiteId", "commandId", "executionResult",
+                "returnedValue", "throwable", "startedAt", "finishedAt"}
+)
 public class ClientResponse {
     private Long id;
+
+
     private Long commandId;
     private Throwable throwable;
     private ExecutionResult executionResult;
     private String returnedValue;
-    private Date finished;
-    private Date started;
+    private Date finishedAt;
+    private Date startedAt;
     private Long suiteId;
 
     @XmlElement(name = "id")
@@ -84,22 +90,22 @@ public class ClientResponse {
 
     @XmlElement(name = "finishedAt")
     @XmlJavaTypeAdapter(DateTimeAdapter.class)
-    public Date getFinished() {
-        return finished;
+    public Date getFinishedAt() {
+        return finishedAt;
+    }
+
+    public void setFinishedAt(Date finishedAt) {
+        this.finishedAt = finishedAt;
     }
 
     @XmlElement(name = "startedAt")
     @XmlJavaTypeAdapter(DateTimeAdapter.class)
-    public void setFinished(Date finished) {
-        this.finished = finished;
+    public Date getStartedAt() {
+        return startedAt;
     }
 
-    public Date getStarted() {
-        return started;
-    }
-
-    public void setStarted(Date started) {
-        this.started = started;
+    public void setStartedAt(Date startedAt) {
+        this.startedAt = startedAt;
     }
 
     @Override
@@ -110,8 +116,8 @@ public class ClientResponse {
                 ", throwable=" + throwable +
                 ", executionResult=" + executionResult +
                 ", returnedValue='" + returnedValue + '\'' +
-                ", finished=" + finished +
-                ", started=" + started +
+                ", finishedAt=" + finishedAt +
+                ", startedAt=" + startedAt +
                 ", suiteId=" + suiteId +
                 '}';
     }
@@ -125,13 +131,11 @@ public class ClientResponse {
 
         if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
         if (!getCommandId().equals(that.getCommandId())) return false;
-        if (getThrowable() != null ? !getThrowable().equals(that.getThrowable()) : that.getThrowable() != null)
-            return false;
         if (getExecutionResult() != that.getExecutionResult()) return false;
         if (getReturnedValue() != null ? !getReturnedValue().equals(that.getReturnedValue()) : that.getReturnedValue() != null)
             return false;
-        if (!getFinished().equals(that.getFinished())) return false;
-        if (!getStarted().equals(that.getStarted())) return false;
+        if (!getFinishedAt().equals(that.getFinishedAt())) return false;
+        if (!getStartedAt().equals(that.getStartedAt())) return false;
         return getSuiteId() != null ? getSuiteId().equals(that.getSuiteId()) : that.getSuiteId() == null;
 
     }
@@ -143,8 +147,8 @@ public class ClientResponse {
         result = 31 * result + (getThrowable() != null ? getThrowable().hashCode() : 0);
         result = 31 * result + getExecutionResult().hashCode();
         result = 31 * result + (getReturnedValue() != null ? getReturnedValue().hashCode() : 0);
-        result = 31 * result + getFinished().hashCode();
-        result = 31 * result + getStarted().hashCode();
+        result = 31 * result + getFinishedAt().hashCode();
+        result = 31 * result + getStartedAt().hashCode();
         result = 31 * result + (getSuiteId() != null ? getSuiteId().hashCode() : 0);
         return result;
     }

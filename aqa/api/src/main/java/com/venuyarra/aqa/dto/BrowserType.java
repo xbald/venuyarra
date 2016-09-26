@@ -6,7 +6,8 @@ package com.venuyarra.aqa.dto;
 public enum BrowserType {
     IE("IE"),
     FIREFOX("FIREFOX"),
-    CHROME("GOOGLECHROME");
+    CHROME("GOOGLECHROME"),
+    SAFARI("SAFARI");
     private final String value;
 
     BrowserType(String value) {
