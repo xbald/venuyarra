@@ -2,6 +2,7 @@ package com.venuyarra.aqa.impl;
 
 import com.venuyarra.aqa.SeleniumCommandDao;
 import com.venuyarra.aqa.dto.ClickCommand;
+import com.venuyarra.aqa.dto.DoubleClickCommand;
 import com.venuyarra.aqa.dto.EnterCommand;
 import com.venuyarra.aqa.dto.SelectCommand;
 import com.venuyarra.aqa.dto.SeleniumCommand;
@@ -78,6 +79,13 @@ public class SeleniumCommandDaoImpl extends JdbcDaoSupport implements SeleniumCo
                     enterCommand.setValue(resultSet.getString("tcs_obj_val"));
                     enterCommand.setParameter(obj_key);
                     return enterCommand;
+                }
+
+                case "Double Click": {
+                    DoubleClickCommand doubleClickCommand = new DoubleClickCommand();
+                    doubleClickCommand.setId(id);
+                    doubleClickCommand.setParameter(obj_key);
+                    return doubleClickCommand;
                 }
 
                 default:
