@@ -2,6 +2,7 @@ package com.venuyarra.aqa.selenium;
 
 import com.venuyarra.aqa.dto.ClickCommand;
 import com.venuyarra.aqa.dto.ClientResponse;
+import com.venuyarra.aqa.dto.DoubleClickCommand;
 import com.venuyarra.aqa.dto.EnterCommand;
 import com.venuyarra.aqa.dto.ExecutionResult;
 import com.venuyarra.aqa.dto.Parameter;
@@ -11,6 +12,7 @@ import com.venuyarra.aqa.executor.SeleniumCommandExecutor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.pagefactory.ByChained;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +46,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
         ClientResponse clientResponse = new ClientResponse();
         clientResponse.setStartedAt(new Date());
         clientResponse.setCommandId(command.getId());
-        logger.debug("Executing command");
+        logger.debug("Executing command {}", command);
         final WebElement webElement = locateElement(command.getLocatorList());
         try {
             assertThat(webElement, should(displayed()).whileWaitingUntil(timeoutHasExpired(SECONDS.toMillis(2))));
@@ -73,6 +75,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
         ClientResponse clientResponse = new ClientResponse();
         clientResponse.setStartedAt(new Date());
         clientResponse.setCommandId(command.getId());
+        logger.debug("Executing command {}", command);
 
         final WebElement webElement = locateElement(command.getLocatorList());
 
@@ -95,6 +98,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
         ClientResponse clientResponse = new ClientResponse();
         clientResponse.setCommandId(command.getId());
         clientResponse.setStartedAt(new Date());
+        logger.debug("Executing command {}", command);
 
         try {
             final String text = getActualResult(command);
@@ -134,6 +138,7 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
         ClientResponse clientResponse = new ClientResponse();
         clientResponse.setCommandId(command.getId());
         clientResponse.setStartedAt(new Date());
+        logger.debug("Executing command {}", command);
 
         final WebElement webElement = locateElement(command.getLocatorList());
 
@@ -141,6 +146,31 @@ public class WebDriverCommandExecutor implements SeleniumCommandExecutor {
             assertThat(webElement, should(displayed()).whileWaitingUntil(timeoutHasExpired(SECONDS.toMillis(2))));
             Select select = new Select(webElement);
             select.selectByValue(command.getValue());
+            clientResponse.setExecutionResult(ExecutionResult.PASSED);
+        } catch (Throwable throwable) {
+            clientResponse.setExecutionResult(ExecutionResult.FAILED);
+            clientResponse.setThrowable(throwable);
+        }
+
+        clientResponse.setFinishedAt(new Date());
+        return clientResponse;
+    }
+
+    @Override
+    public ClientResponse execute(DoubleClickCommand doubleClickCommand) {
+        ClientResponse clientResponse = new ClientResponse();
+        clientResponse.setStartedAt(new Date());
+        clientResponse.setCommandId(doubleClickCommand.getId());
+        logger.debug("Executing command {}", doubleClickCommand);
+
+        final WebElement webElement = locateElement(doubleClickCommand.getLocatorList());
+
+        try {
+            assertThat(webElement, should(displayed()).whileWaitingUntil(timeoutHasExpired(SECONDS.toMillis(2))));
+
+            Actions actions = new Actions(webDriver);
+            actions.doubleClick(webElement).build().perform();
+
             clientResponse.setExecutionResult(ExecutionResult.PASSED);
         } catch (Throwable throwable) {
             clientResponse.setExecutionResult(ExecutionResult.FAILED);

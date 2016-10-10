@@ -2,6 +2,7 @@ package com.venuyarra.aqa.executor;
 
 import com.venuyarra.aqa.dto.ClickCommand;
 import com.venuyarra.aqa.dto.ClientResponse;
+import com.venuyarra.aqa.dto.DoubleClickCommand;
 import com.venuyarra.aqa.dto.EnterCommand;
 import com.venuyarra.aqa.dto.SelectCommand;
 import com.venuyarra.aqa.dto.ValidationCommand;
@@ -14,4 +15,5 @@ public interface SeleniumCommandExecutor  {
     ClientResponse execute(EnterCommand command);
     ClientResponse execute(ValidationCommand command);
     ClientResponse execute(SelectCommand selectCommand);
+    ClientResponse execute(DoubleClickCommand doubleClickCommand);
 }

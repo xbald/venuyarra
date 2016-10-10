@@ -2,6 +2,7 @@ package com.venuyarra.aqa;
 
 import com.venuyarra.aqa.dto.ClickCommand;
 import com.venuyarra.aqa.dto.ClientResponse;
+import com.venuyarra.aqa.dto.DoubleClickCommand;
 import com.venuyarra.aqa.dto.EnterCommand;
 import com.venuyarra.aqa.dto.ExecutionResult;
 import com.venuyarra.aqa.dto.Parameter;
@@ -49,6 +50,33 @@ public class SerializationTests {
 
         final ClickCommand unmarshalled = JAXB.unmarshal(new StringReader(marshalled), ClickCommand.class);
         Assert.assertEquals(command, unmarshalled, "Deserialized object differs from original");
+    }
+
+    @Test
+    public void testDoubleClickCommandSerialize() throws JAXBException {
+        DoubleClickCommand command = createDoubleClickCommand();
+
+        StringWriter sw = new StringWriter();
+
+        JAXB.marshal(command, sw);
+        final String marshalled = sw.toString();
+
+        final DoubleClickCommand unmarshalled = JAXB.unmarshal(new StringReader(marshalled), DoubleClickCommand.class);
+        Assert.assertEquals(command, unmarshalled, "Deserialized object differs from original");
+    }
+
+    private DoubleClickCommand createDoubleClickCommand() {
+        DoubleClickCommand command = new DoubleClickCommand();
+        command.setId(23L);
+        command.setLocatorList(
+                Arrays.asList(
+                        new Parameter(1L, "locT", "locV"),
+                        new Parameter(2L, "locT", "locV"),
+                        new Parameter(3L, "locT", "locV"),
+                        new Parameter(4L, "locT", "locV")
+                )
+        );
+        return command;
     }
 
     @Test
